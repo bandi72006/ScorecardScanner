@@ -1,0 +1,25 @@
+Scanning:
+    Preprocess image
+    split image into individual characters
+        Cascade classifier
+            Generate data set of handwriting
+
+    Public and private methods/attributes
+
+    CNN for individual characters
+    Store data into WCIF format - https://github.com/thewca/wcif/blob/master/specification.md
+
+
+Front-end:
+    Create UI
+    Create menus
+    Look good?
+
+Statistics:
+    find stats to generate
+    generate them
+    unique ways to display them
+
+Complexity:
+    Refer to spec for complexity marks?
+    Public and private methods/attributes
