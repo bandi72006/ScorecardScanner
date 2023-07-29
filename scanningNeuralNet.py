@@ -15,6 +15,64 @@ class neuralNet():
 
     def preprocess(self, inputImage):
         currImage = cv2.imread(inputImage)
+
+        #Cropping edges to include only scorecard
+
+        #Top boundary
+        meanRowVal = 0
+        whiteThreshold = 200
+        currentRow = 0
+        while meanRowVal < whiteThreshold:
+            meanRowVal = 0
+            for pixel in range(len(currImage[currentRow])):
+                meanRowVal += sum(currImage[currentRow][pixel])/3 #Mean brightness of each pixel accounting for RGB
+
+            meanRowVal /= len(currImage[currentRow])
+            currentRow += 1
+
+        #Bottom boundary
+        currImage = currImage[currentRow:]
+
+        meanRowVal = 0
+        currentRow = len(currImage)-1
+        while meanRowVal < whiteThreshold:
+            meanRowVal = 0
+            for pixel in range(len(currImage[currentRow])):
+                meanRowVal += sum(currImage[currentRow][pixel])/3 #Mean brightness of each pixel accounting for RGB
+
+            meanRowVal /= len(currImage[currentRow])
+            currentRow -= 1
+
+        currImage = currImage[:currentRow]
+
+        #Right boundary
+        meanColVal = 0
+        currentCol = 0
+        while meanColVal < whiteThreshold:
+            meanColVal = 0
+            for pixel in range(len(currImage)):
+                meanColVal += sum(currImage[pixel][currentCol])/3 #Mean brightness of each pixel accounting for RGB
+
+            meanColVal /= len(currImage)
+            currentCol += 1
+
+        currImage = currImage[:, currentCol:]
+
+        #Left boundary
+        meanColVal = 0
+        currentCol = len(currImage[0])-1
+        while meanColVal < whiteThreshold:
+            meanColVal = 0
+            for pixel in range(len(currImage)):
+                meanColVal += sum(currImage[pixel][currentCol])/3 #Mean brightness of each pixel accounting for RGB
+
+            meanColVal /= len(currImage)
+            currentCol -= 1
+
+        currImage = currImage[:, :currentCol]
+
+
+
         currImage = cv2.cvtColor(currImage, cv2.COLOR_BGR2GRAY)
 
         #Dimensions of scorecard ~310x400
@@ -23,11 +81,11 @@ class neuralNet():
 
         cv2.imwrite((inputImage.replace(".jpg","") + "postProcess.jpg"), currImage)
 
-        #INITIALIZE MODEL IF NOT FOUND IN FOLDERS USING PRIVATAE METHODS
-
 
 
     def generateCascadeDataset(self):
+        #INITIALIZE MODEL IF NOT FOUND IN FOLDERS USING PRIVATAE METHODS
+        
         #Dataset taken from:
         #https://www.kaggle.com/datasets/crawford/emnist
 
@@ -37,7 +95,7 @@ class neuralNet():
         mappings = {}
         for line in mappingsFile:
             line = line.split()
-            mappings.update({int(line[0]): int(line[1])})
+            mappings.update({int(line[0]): int(line[1])}) #Reads mapping file and adds to hashtable/dictionary of mappings
 
 
 
@@ -52,7 +110,7 @@ class neuralNet():
             if i > 100:
                 break
 
-        ele = 75
+        ele = 77
 
         ASCIIVal = mappings[int(EMNIST[ele].pop(0))]
 
@@ -62,7 +120,6 @@ class neuralNet():
 
 
         # creating a plot
-        plt.title("Dasda")
         plt.figure()
         
         # plotting a plot

@@ -2,7 +2,10 @@ Scanning:
     Preprocess image
     split image into individual characters
         Cascade classifier
-            Generate data set of handwriting
+            Check if already generated via .txt file
+            Choose directory to create dataset
+            Generate data set of handwriting - IF NOT ALREADY GENERATED
+            
 
     Public and private methods/attributes
 
