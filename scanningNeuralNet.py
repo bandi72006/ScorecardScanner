@@ -13,7 +13,7 @@ class neuralNet():
     def __init__(self):
         pass
 
-    def preprocess(self, inputImage):
+    def preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
         currImage = cv2.imread(inputImage)
 
         #Cropping edges to include only scorecard
@@ -72,59 +72,28 @@ class neuralNet():
         currImage = currImage[:, :currentCol]
 
 
-
+        
         currImage = cv2.cvtColor(currImage, cv2.COLOR_BGR2GRAY)
+
+        _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
 
         #Dimensions of scorecard ~310x400
         #Therefore downscaled to same aspect ratio
-        currImage = cv2.resize(currImage, (310,400))
-
-        cv2.imwrite((inputImage.replace(".jpg","") + "postProcess.jpg"), currImage)
+        currImage = cv2.resize(currImage, dimensions)
 
 
-
-    def generateCascadeDataset(self):
-        #INITIALIZE MODEL IF NOT FOUND IN FOLDERS USING PRIVATAE METHODS
+        #Contours of rectangular boxes
         
-        #Dataset taken from:
-        #https://www.kaggle.com/datasets/crawford/emnist
+        #RETR_TREE = retrieval mode of contours - tells when contours are children of other contours (within other contours)
+        #CHAIN_APPROX_SIMPLE = returns only corners of contour rather than all points lying on contour
 
-        #Dataset uses its own custom mapping for data-labelling (not the same as ASCII)
-        #So we must synchronize the mappings given to us in a text file
-        mappingsFile = open(r"C:\Users\bandi\OneDrive\Documents\Coding\Datasets\EMNIST\emnist-balanced-mapping.txt", "r")
-        mappings = {}
-        for line in mappingsFile:
-            line = line.split()
-            mappings.update({int(line[0]): int(line[1])}) #Reads mapping file and adds to hashtable/dictionary of mappings
-
-
-
-
-
-        #Reading training data CSV file
-        EMNISTfile = open(r"C:\Users\bandi\OneDrive\Documents\Coding\Datasets\EMNIST\emnist-balanced-train.csv")
-        csvreader = csv.reader(EMNISTfile)
-        EMNIST = []
-        for i, row in enumerate(csvreader):
-            EMNIST.append(row)
-            if i > 100:
-                break
-
-        ele = 77
-
-        ASCIIVal = mappings[int(EMNIST[ele].pop(0))]
-
-        EMNIST = np.transpose(np.array([float(i) for i in EMNIST[ele]]).reshape(28,28))
-
-        print(chr(ASCIIVal), ASCIIVal)
-
-
-        # creating a plot
-        plt.figure()
+        contours, _ = cv2.findContours(currImage, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        currImage = cv2.cvtColor(currImage,cv2.COLOR_GRAY2BGR)
+        for cont in contours:
+            if cv2.contourArea(cont) > 3500:
+                contours = cv2.drawContours(currImage, cont, -1, (0,0,255), 20)
+                print(cv2.contourArea(cont))
+                print(cont)
         
-        # plotting a plot
-
-        
-        # customizing plot
-        plt.imshow(EMNIST, interpolation="nearest")
-        plt.show()
+        if saveImage:
+            cv2.imwrite((inputImage.replace(".jpg","") + outputPath), currImage)

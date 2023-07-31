@@ -2,5 +2,4 @@ from scanningNeuralNet import *
 
 scanNeuralNet = neuralNet()
 
-#scanNeuralNet.generateCascadeDataset()
-scanNeuralNet.preprocess("testCard.jpg")
+scanNeuralNet.preprocess("testCard.jpg", saveImage=True)
