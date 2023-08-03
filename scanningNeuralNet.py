@@ -6,14 +6,13 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-#Dataset handling
-import csv
 
 class neuralNet():
     def __init__(self):
-        pass
+        self.predictedResults = []
 
-    def preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
+    #Additional arguements for debugging
+    def __preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
         currImage = cv2.imread(inputImage)
 
         #Cropping edges to include only scorecard
@@ -78,7 +77,7 @@ class neuralNet():
         _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
 
         #Dimensions of scorecard ~310x400
-        #Therefore downscaled to same aspect ratio
+        #Therefore downscaled to same aspect ratio (if default parameter is used)
         currImage = cv2.resize(currImage, dimensions)
 
 
@@ -87,13 +86,72 @@ class neuralNet():
         #RETR_TREE = retrieval mode of contours - tells when contours are children of other contours (within other contours)
         #CHAIN_APPROX_SIMPLE = returns only corners of contour rather than all points lying on contour
 
-        contours, _ = cv2.findContours(currImage, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-        currImage = cv2.cvtColor(currImage,cv2.COLOR_GRAY2BGR)
+        contours, _ = cv2.findContours(currImage, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        
+        #currImage = cv2.cvtColor(currImage,cv2.COLOR_GRAY2BGR)
+
+        finalContours = []
+
         for cont in contours:
-            if cv2.contourArea(cont) > 3500:
-                contours = cv2.drawContours(currImage, cont, -1, (0,0,255), 20)
-                print(cv2.contourArea(cont))
-                print(cont)
+            if cv2.contourArea(cont) > 3800 and cv2.contourArea(cont) < 5000:
+                rectangle = cv2.approxPolyDP(cont, 0.009 * cv2.arcLength(cont, True), True)
+                
+                #currImage = cv2.drawContours(currImage, rectangle, -1, (0,0,255), 2)
+
+
+                rectangle = rectangle.ravel() #Flattens to 1D array
+                #Containts (x,y) of top-left corner and bottom-corner
+                rectanglePosition = [[rectangle[0], rectangle[1]], [rectangle[0], rectangle[1]]]
+                for i in range(0, len(rectangle), 2):
+                    #Flattened array now means that pairs of (x,y) are contiguous
+                    x = rectangle[i]
+                    y = rectangle[i+1]
+
+                    #Updates the rectangle position if the x and/or y is outside the current tought-to-be correct rectangle
+                    rectanglePosition[0][0] = min(rectanglePosition[0][0], x)
+                    rectanglePosition[1][0] = max(rectanglePosition[1][0], x)
+                    rectanglePosition[0][1] = min(rectanglePosition[0][1], y)
+                    rectanglePosition[1][1] = max(rectanglePosition[1][1], y)
+                    
+                finalContours.append(rectanglePosition)
+
         
         if saveImage:
             cv2.imwrite((inputImage.replace(".jpg","") + outputPath), currImage)
+
+        return finalContours, currImage
+    
+
+    def processCard(self, file):
+        times, currImage = self.__preprocess(file) #Stores coordinates of rectangles surrounding times
+
+        _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
+
+        #Loops over every time
+
+        for time in times:
+            #Isolates every digit by finding white columns after columns that have black pixels
+            whiteColumns = []
+            for column in range(time[0][0]+5, time[1][0]-5):
+                columnHeight = time[1][1] - time[0][1]
+                
+                whiteSpaces = 0
+                currentStreak = 0
+                #Find longest contiguous section of white pixels in column
+                for pixel in currImage[time[0][1]-5:time[1][1]+5, column]:
+                    if pixel == 255:
+                        currentStreak += 1
+                        whiteSpaces = max(currentStreak, whiteSpaces)
+                    else:
+                        currentStreak = 0
+
+                if whiteSpaces > columnHeight-10:
+                    whiteColumns.append(column)
+                    cv2.line(currImage, (column,time[0][1]), (column, time[1][1]), (0,0,255), 1)
+
+                
+
+            
+            cv2.imwrite((file.replace(".jpg","") + "postProcess.jpg"), currImage)
+        
+
