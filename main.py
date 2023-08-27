@@ -1,5 +1,5 @@
-from scanningNeuralNet import *
+from scorecard import *
 
-scanNeuralNet = neuralNet()
+scanNeuralNet = scoreCard()
 
 scanNeuralNet.processCard("testCard.jpg")
