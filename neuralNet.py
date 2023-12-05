@@ -14,7 +14,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Conv2D, InputLayer
 from keras.layers import Activation, MaxPooling2D, Dropout, Flatten, Reshape
 from keras.utils.np_utils import to_categorical 
-from scikeras.wrappers import KerasClassifier
+#from scikeras.wrappers import KerasClassifier
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import cross_val_score
 import cv2
@@ -22,18 +22,22 @@ import tensorflow as tf
 from tensorflow.keras.datasets import mnist #Imports dataset from library
 import os
 
-
 class neuralNet():
     def __init__(self):
         #Batch size = How many samples trained on before updating weights of network
         #Used to reduce memory requirements/lenght of training and also leads to more frequent update of weights
         self.batchSize = 1
         
+        print("ASdsadsadsad" + os.getcwd())
+
         if os.path.isfile("neuralNet.keras"):
             self.model = tf.keras.models.load_model("neuralNet.keras")
+        if os.path.isfile("ScorecardScanner/neuralNet.keras"):
+            self.model = tf.keras.models.load_model("ScorecardScanner/neuralNet.keras")
         else:
             self.model = self.createModel()
             self.trainModel()
+            
 
         #self.model.build((200,100,100,1))
         #self.model.summary()

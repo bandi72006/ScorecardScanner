@@ -2,4 +2,4 @@ from scorecard import *
 
 scanNeuralNet = scoreCard()
 
-scanNeuralNet.processCard("testCard.jpg")
+scanNeuralNet.processCard("ScorecardScanner/testCard.jpg")
