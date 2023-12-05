@@ -32,7 +32,7 @@ class neuralNet():
 
         if os.path.isfile("neuralNet.keras"):
             self.model = tf.keras.models.load_model("neuralNet.keras")
-        if os.path.isfile("ScorecardScanner/neuralNet.keras"):
+        elif os.path.isfile("ScorecardScanner/neuralNet.keras"):
             self.model = tf.keras.models.load_model("ScorecardScanner/neuralNet.keras")
         else:
             self.model = self.createModel()

@@ -171,18 +171,18 @@ class scoreCard():
                 for index in range(len(digitBoundaries)):
                     digit = cv2.resize(currImage[time[0][1]:time[1][1], digitBoundaries[index][0]: digitBoundaries[index][1]], (28,28))
 
-                    plt.imshow(digit, interpolation='nearest')
+                    #plt.imshow(digit, interpolation='nearest')
 
-                    digit = np.expand_dims(digit,-1)
-                    digit = np.expand_dims(digit, 0)
+                    #digit = np.expand_dims(digit,-1)
+                    #digit = np.expand_dims(digit, 0)
 
 
                     probabilities = self.reader.predict(digit)
                     
                     print(probabilities*100)
                     print(np.argmax(probabilities))
-                    plt.show()
-                    plt.close()
+                    #plt.show()
+                    #plt.close()
 
 
                     timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)
