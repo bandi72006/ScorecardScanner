@@ -1,12 +1,12 @@
 import pygame
 class Button:
-    def __init__(self, screen, XY, dims, text, colour = (255,242,204), hoverColour = (255,213,89)):
+    def __init__(self, screen, XY, dims, text, colour = (255,242,204), hoverColour = (255,213,89), textSize = 32):
         self.__screen = screen
         self.__coordinates = (XY[0], XY[1]) #Coordinates of top-left corner
         self.__dimensions = (dims[0], dims[1])
         self.__colour = colour #Colour for neutral button
         self.__hoverColour = hoverColour #Colour for when mouse is hovering above button
-        self.__font = pygame.font.Font('freesansbold.ttf', 16)
+        self.__font = pygame.font.Font('freesansbold.ttf', textSize)
         self.__text = self.__font.render(text, False, (0,0,0))
         self.__textSize = (self.__text.get_width(), self.__text.get_height()) #Gets space taken by text
 
