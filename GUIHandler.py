@@ -14,8 +14,9 @@ class GUI:
     def draw(self):
         while True:
             #Drawing
+            mousePos = pygame.mouse.get_pos()
             self.__screen.fill((255,255,255))
-            self.button.draw()
+            self.button.draw(mousePos)
             pygame.display.flip()
 
 
