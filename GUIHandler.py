@@ -1,5 +1,8 @@
 import pygame
 from button import *
+from image import *
+from text import *
+import time
 
 class GUI:
     def __init__(self, dimensions):
@@ -8,26 +11,61 @@ class GUI:
         pygame.display.set_caption("WCA Scorecard Scanner")
 
         #0 = Main menu
-        self.currentScreen = 0
-        self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry"), 
-                           Button(self.__screen, (665,300), (300,100), "Statistics"),
-                           Button(self.__screen, (315,425), (300,100), "Export data"),
-                           Button(self.__screen, (665,425), (300,100), "Configuration"),
-                           Button(self.__screen, (490,550), (300,100), "Exit", (255,94,94), (255,33,33))]
+        #1 = Data entry menu
+        #2 = statistics menu
+        #3 = export data menu
+        #4 = configuration menu
+        #5 = Data entry sub menu
+        self.__currentScreen = 0
+        self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M1"), 
+                           Button(self.__screen, (665,300), (300,100), "Statistics", "M2"),
+                           Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
+                           Button(self.__screen, (665,425), (300,100), "Configuration", "M4"),
+                           Button(self.__screen, (490,550), (300,100), "Exit", "E", (255,94,94), (255,33,33)),
+                           Image(self.__screen, "WCALogo.png", (350,30), (200,200)),
+                           Text(self.__screen, "Data Enterer", (580, 110), 60)
+                           ]
         
-        self.__WCALogo = pygame.transform.scale(pygame.image.load("WCALogo.png"), (250,250)) #Logo as attribute as used in every menu, saves rendering/processing time
+        self.__dataEntryMenu = [Button(self.__screen, (440,200), (400,125), "Scan new card", "M5"),
+                                Button(self.__screen, (440,400), (400,125), "Edit competition results", "O"),
+                                Button(self.__screen, (530,600), (200,75), "Back", "M0", (255,94,94), (255,33,33))]
 
+        self.__statsMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
+
+        self.__exportDataMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
+
+        self.__configMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
+
+        self.__menuDict = {0: self.__mainMenu, 1: self.__dataEntryMenu, 2: self.__statsMenu,
+                           3: self.__exportDataMenu, 4: self.__configMenu}
+
+
+    def getCurrentScreen(self):
+        return self.__currentScreen
+        
+    def setCurrentScreen(self, menuNum):
+        self.__currentScreen = menuNum
 
     def draw(self):
+        clickTime = 0 #Not set as attribute as only used within this function
         while True:
             #Drawing
+            registeredClicks = pygame.mouse.get_pressed() #0th element = left click
+
+            
+            #Held down left click also clicks buttons on next menu
+            if time.time() - clickTime > 0.5 and registeredClicks[0]: #Must include delay to allow mouse to be unclicked
+                isClick = True
+                clickTime = time.time()
+            else:
+                isClick = False
             mousePos = pygame.mouse.get_pos()
+
+
             self.__screen.fill((255,255,255))
-            for element in self.__mainMenu:
-                element.draw(mousePos)
-            
-            self.__screen.blit(self.__WCALogo, (515,10))
-            
+            for element in self.__menuDict[self.getCurrentScreen()]:
+                element.draw(mousePos, isClick, self.setCurrentScreen)
+
             pygame.display.flip()
 
 
@@ -36,3 +74,5 @@ class GUI:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     break
+
+        

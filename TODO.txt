@@ -11,7 +11,8 @@ Scanning:
 
     CNN for individual characters
     Store data into WCIF format - https://github.com/thewca/wcif/blob/master/specification.md
-
+    
+    Remove unecessary libraries to reduce startup time
 
 Front-end:
     Create UI
