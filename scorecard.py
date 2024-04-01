@@ -184,7 +184,7 @@ class scoreCard():
                     #plt.show()
                     #plt.close()
 
-
+                    ####QUEUE FOR NEURAL NET HANDING EACH CHARACTER????
                     timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)
 
                 print(timeResult)

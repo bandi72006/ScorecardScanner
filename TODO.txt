@@ -14,6 +14,8 @@ Scanning:
     
     Remove unecessary libraries to reduce startup time
 
+    Save each scorecard in folder for future WCA lookup
+
 Front-end:
     Create UI
     Create menus
@@ -24,6 +26,14 @@ Statistics:
     generate them
     unique ways to display them
 
+Config:
+    Choose camera input
+    Enter comp name 
+    Choose output directory of comp data
+
 Complexity:
     Refer to spec for complexity marks?
     Public and private methods/attributes
+    QUEUE FOR NEURAL NET HANDING EACH CHARACTER????
+    HASH TABLE TO STORE RESULTS (KEY = WCAID + EVENT + ROUND -> HASHALGORITHM)
+    Use interface for UI elements 
