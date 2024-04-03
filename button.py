@@ -1,4 +1,6 @@
 import pygame
+from selectionMenu import *
+
 class Button:
     def __init__(self, screen, XY, dims, text, function, colour = (255,242,204), hoverColour = (255,213,89), textSize = 32):
         self.__screen = screen
@@ -7,12 +9,17 @@ class Button:
         self.__colour = colour #Colour for neutral button
         self.__hoverColour = hoverColour #Colour for when mouse is hovering above button
         self.__font = pygame.font.Font('freesansbold.ttf', textSize)
-        self.__text = self.__font.render(text, False, (0,0,0))
-        self.__textSize = (self.__text.get_width(), self.__text.get_height()) #Gets space taken by text
+        self.__renderFont(text)
         self.__function = function
+
         #Function code:
         # M0 - Menu change to menu #0
         #E - quit program
+        #S"char" - selection menu related to char
+
+    def __renderFont(self, textToRender):
+        self.__text = self.__font.render(textToRender, False, (0,0,0))
+        self.__textSize = (self.__text.get_width(), self.__text.get_height()) #Gets space taken by text
 
     def draw(self, mousePos, isClick, setScreen):
         #If the mouse is over the button
@@ -32,6 +39,13 @@ class Button:
     def __onClick(self, setScreen):
         if self.__function[0] == "M":
             setScreen(int(self.__function[-1]))
+        
+        elif self.__function[0] == "S":
+            self.__selectionMenu = selectionMenu() #Talk about like static class or sumn (look at todo list)
+            self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[-1])
+
+            self.__renderFont(self.__selectionMenuOutput)
+            return self.__selectionMenuOutput
 
         elif self.__function == "E":
             pygame.quit()

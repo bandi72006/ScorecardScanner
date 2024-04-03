@@ -21,6 +21,8 @@ Front-end:
     Create menus
     Look good?
 
+    Static function for functions of buttons (look at A3 sheet of OOP)
+
 Statistics:
     find stats to generate
     generate them

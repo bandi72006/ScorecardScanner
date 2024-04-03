@@ -42,7 +42,8 @@ class GUI:
                               Image(self.__screen, "WCALogo.png", (1170,610), (100,100)),
                               Text(self.__screen, "Take photo", (50, 30), 50),
                               Camera(self.__screen, (460,100), (480,360)),
-                              Button(self.__screen, (540,600), (200,75), "Back", "M0", (255,94,94), (255,33,33))
+                              Button(self.__screen, (100,350), (200,40), "Select event", "SE", textSize=20),
+                              Button(self.__screen, (540,600), (200,75), "Back", "M0", (255,94,94), (255,33,33)),
                               ]
 
         self.__statsMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
