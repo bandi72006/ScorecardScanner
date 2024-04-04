@@ -19,31 +19,34 @@ class GUI:
         #5 = Scanner menu
 
 
-        self.__currentScreen = 0
+        self.__currentScreen = 5
         self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M1"), 
                            Button(self.__screen, (665,300), (300,100), "Statistics", "M2"),
                            Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
                            Button(self.__screen, (665,425), (300,100), "Configuration", "M4"),
                            Button(self.__screen, (490,550), (300,100), "Exit", "E", (255,94,94), (255,33,33)),
-                           Image(self.__screen, "WCALogo.png", (350,30), (200,200)),
+                           Images(self.__screen, "WCALogo.png", (350,30), (200,200)),
                            Text(self.__screen, "Data Enterer", (580, 110), 60)
                            ]
         
         self.__dataEntryMenu = [Button(self.__screen, (440,200), (400,125), "Scan new card", "M5"),
                                 Button(self.__screen, (440,400), (400,125), "Edit competition results", "O"),
                                 Button(self.__screen, (530,600), (200,75), "Back", "M0", (255,94,94), (255,33,33)),
-                                Image(self.__screen, "WCALogo.png", (1170,610), (100,100)),
+                                Images(self.__screen, "WCALogo.png", (1170,610), (100,100)),
                                 Text(self.__screen, "Data Entry", (50, 30), 80)
                                 ]
 
         self.__scannerMenu = [Button(self.__screen, (1060, 260), (150,150), "", ""),
-                              Image(self.__screen, "cameraIcon.png", (1070, 285), (130,100)),
+                              Images(self.__screen, "cameraIcon.png", (1070, 285), (130,100)),
                               Text(self.__screen, "or press Space", (1060,420), 20),
-                              Image(self.__screen, "WCALogo.png", (1170,610), (100,100)),
+                              Images(self.__screen, "WCALogo.png", (1170,610), (100,100)),
                               Text(self.__screen, "Take photo", (50, 30), 50),
                               Camera(self.__screen, (460,100), (480,360)),
-                              Button(self.__screen, (100,350), (200,40), "Select event", "SE", textSize=20),
-                              Button(self.__screen, (540,600), (200,75), "Back", "M0", (255,94,94), (255,33,33)),
+                              Text(self.__screen, "Event: ", (100, 150), 40),
+                              Button(self.__screen, (100,200), (300,75), "Select competitor", "SC", textSize=20),
+                              Text(self.__screen, "Competitor: ", (100, 400), 40),
+                              Button(self.__screen, (100,450), (300,75), "Select event", "SE", textSize=20),
+                              Button(self.__screen, (540,600), (200,75), "Back", "M1", (255,94,94), (255,33,33)),
                               ]
 
         self.__statsMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]

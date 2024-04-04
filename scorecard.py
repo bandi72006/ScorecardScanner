@@ -8,18 +8,21 @@ import matplotlib.pyplot as plt
 from neuralNet import *
 
 
-class scoreCard():
+class Scorecard():
     def __init__(self):
-        self.predictedResults = []
-        self.reader = neuralNet()
+        self.__predictedResults = []
+        self.__reader = neuralNet()
 
     #Additional arguements for debugging
     def __preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
-        currImage = cv2.imread(inputImage)
+        currImage = cv2.imread("testCard.jpg")
+        #currImage = inputImage
+
 
         #Cropping edges to include only scorecard
 
         #Top boundary
+
         meanRowVal = 0
         whiteThreshold = 200
         currentRow = 0
@@ -27,6 +30,7 @@ class scoreCard():
             meanRowVal = 0
             for pixel in range(len(currImage[currentRow])):
                 meanRowVal += sum(currImage[currentRow][pixel])/3 #Mean brightness of each pixel accounting for RGB
+
 
             meanRowVal /= len(currImage[currentRow])
             currentRow += 1
@@ -72,14 +76,14 @@ class scoreCard():
 
         currImage = currImage[:, :currentCol]
 
-
         
         currImage = cv2.cvtColor(currImage, cv2.COLOR_BGR2GRAY)
 
         _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
-
+       
         #Dimensions of scorecard ~310x400
         #Therefore downscaled to same aspect ratio (if default parameter is used)
+
         currImage = cv2.resize(currImage, dimensions)
 
 
@@ -87,6 +91,8 @@ class scoreCard():
         
         #RETR_TREE = retrieval mode of contours - tells when contours are children of other contours (within other contours)
         #CHAIN_APPROX_SIMPLE = returns only corners of contour rather than all points lying on contour
+
+
 
         contours, _ = cv2.findContours(currImage, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
@@ -119,13 +125,14 @@ class scoreCard():
 
         
         if saveImage:
-            cv2.imwrite((inputImage.replace(".jpg","") + outputPath), currImage)
+            #cv2.imwrite((inputImage.replace(".jpg","") + outputPath), currImage)
+            cv2.imwrite("testidk.jpg", currImage)
 
         return finalContours, currImage
     
 
-    def processCard(self, file):
-        times, currImage = self.__preprocess(file) #Stores coordinates of rectangles surrounding times
+    def processCard(self, file, save = False):
+        times, currImage = self.__preprocess(file, saveImage=save) #Stores coordinates of rectangles surrounding times
 
         _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
 

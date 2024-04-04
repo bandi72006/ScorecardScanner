@@ -41,6 +41,9 @@ class Button:
             setScreen(int(self.__function[-1]))
         
         elif self.__function[0] == "S":
+            #Pop chosen competitior from list once time is confirmed
+            #AUTOMATICALLY HAVE NEXT COMPETITOR CHOSEN AFTER PREVIOUS ONE IS CONFIRMED
+
             self.__selectionMenu = selectionMenu() #Talk about like static class or sumn (look at todo list)
             self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[-1])
 
