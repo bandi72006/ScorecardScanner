@@ -176,18 +176,16 @@ class Scorecard():
             if len(digitBoundaries) > 0: #Skips any empty result boxex
                 timeResult = ""
                 for index in range(len(digitBoundaries)):
-                    digit = cv2.resize(currImage[time[0][1]:time[1][1], digitBoundaries[index][0]: digitBoundaries[index][1]], (28,28))
 
+                    digit = cv2.resize(currImage[time[0][1]:time[1][1], digitBoundaries[index][0]: digitBoundaries[index][1]], (28,28))
                     #plt.imshow(digit, interpolation='nearest')
 
-                    #digit = np.expand_dims(digit,-1)
-                    #digit = np.expand_dims(digit, 0)
-
-
-                    probabilities = self.reader.predict(digit)
+                    digit = np.expand_dims(digit,-1)
+                    digit = np.expand_dims(digit, 0)
+                    probabilities = self.__reader.predict(digit)
                     
-                    print(probabilities*100)
-                    print(np.argmax(probabilities))
+                    #print(probabilities*100)
+                    #print(np.argmax(probabilities))
                     #plt.show()
                     #plt.close()
 
