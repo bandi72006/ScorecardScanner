@@ -39,7 +39,6 @@ class neuralNet():
 
         #self.model.build((200,100,100,1))
         #self.model.summary()
-        self.counter = 0
 
 
     def createModel(self):
@@ -88,5 +87,5 @@ class neuralNet():
 
     def predict(self, image):
 
-        return self.model.predict(image)
+        return self.model.predict(image, verbose = 0)
 
