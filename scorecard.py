@@ -15,8 +15,8 @@ class Scorecard():
 
     #Additional arguements for debugging
     def __preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
-        currImage = cv2.imread("testCard.jpg")
-        #currImage = inputImage
+        #currImage = cv2.imread("testCard.jpg")
+        currImage = inputImage
 
 
         #Cropping edges to include only scorecard
@@ -176,18 +176,40 @@ class Scorecard():
             if len(digitBoundaries) > 0: #Skips any empty result boxex
                 timeResult = ""
                 for index in range(len(digitBoundaries)):
+                    digit = currImage[time[0][1]:time[1][1], digitBoundaries[index][0]: digitBoundaries[index][1]]
 
-                    digit = cv2.resize(currImage[time[0][1]:time[1][1], digitBoundaries[index][0]: digitBoundaries[index][1]], (28,28))
-                    #plt.imshow(digit, interpolation='nearest')
+                    #Resizes only height
+                    digit = cv2.resize(digit, (digitBoundaries[index][1] - digitBoundaries[index][0], 28))
+                    
+                    #Adds empty columns to left and right until width is 28
+
+
+                    columnOfWhite = np.transpose(np.array([255]*28)[np.newaxis]) #Vertical column of empty pixels
+                    while True: #Adds alternatively to left and right of digit
+                        if digit.shape[1] >= 28:
+                            break
+                        
+                        digit = np.append(columnOfWhite, digit, axis=1)
+
+                        if digit.shape[1] >= 28:
+                            break
+                        
+                        digit = np.append(digit, columnOfWhite, axis=1)
+
+
+                    print(digit.shape)
+                    plt.imshow(digit, interpolation='nearest')
+                    plt.show()
+                    plt.close()
+
+
 
                     digit = np.expand_dims(digit,-1)
                     digit = np.expand_dims(digit, 0)
                     probabilities = self.__reader.predict(digit)
                     
-                    #print(probabilities*100)
-                    #print(np.argmax(probabilities))
-                    #plt.show()
-                    #plt.close()
+                    print(probabilities*100)
+                    print(np.argmax(probabilities))
 
                     ####QUEUE FOR NEURAL NET HANDING EACH CHARACTER????
                     timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)

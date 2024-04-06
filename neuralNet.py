@@ -39,6 +39,7 @@ class neuralNet():
 
         #self.model.build((200,100,100,1))
         #self.model.summary()
+        self.counter = 0
 
 
     def createModel(self):
