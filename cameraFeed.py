@@ -55,5 +55,7 @@ class Camera:
                 if event.key == pygame.K_SPACE:
                     times = Scorecard()
                     times.processCard(self.__getCameraInput(), save = True)
+                    results = times.getResults()
+                    setScreen(6, results)
 
 

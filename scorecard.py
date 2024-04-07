@@ -121,7 +121,19 @@ class Scorecard():
                     rectanglePosition[0][1] = min(rectanglePosition[0][1], y)
                     rectanglePosition[1][1] = max(rectanglePosition[1][1], y)
                     
-                finalContours.append(rectanglePosition)
+
+                #Checks for any accidentally repeated contours
+
+                isRepeated = False
+                for contour in finalContours:
+                    #If within 10 pixels of eachother
+                    print(abs(contour[0][0] - rectanglePosition[0][0]) + abs(contour[0][1] - rectanglePosition[0][1]))
+                    if abs(contour[0][0] - rectanglePosition[0][0]) + abs(contour[0][1] - rectanglePosition[0][1]) <= 10:
+                        isRepeated = True
+
+
+                if not isRepeated: 
+                    finalContours.append(rectanglePosition)
 
         
         if saveImage:
@@ -136,7 +148,6 @@ class Scorecard():
 
         _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
 
-        #Loops over every time
 
         for time in times:
             #Isolates every digit by finding white columns after columns that have black pixels
@@ -173,7 +184,7 @@ class Scorecard():
             
             #cv2.imwrite((file.replace(".jpg","") + "postProcess.jpg"), test)
 
-            if len(digitBoundaries) > 0: #Skips any empty result boxex
+            if len(digitBoundaries) > 0: #Skips any empty result boxes
                 timeResult = ""
                 for index in range(len(digitBoundaries)):
 
@@ -232,7 +243,13 @@ class Scorecard():
                         ####QUEUE FOR NEURAL NET HANDING EACH CHARACTER????
                         timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)
 
-                print(timeResult)
+
+                
+                #print(timeResult)
+                self.__predictedResults.append(timeResult)
+
+    def getResults(self):
+        return self.__predictedResults
 
         
 

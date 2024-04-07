@@ -19,7 +19,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import cross_val_score
 import cv2
 import tensorflow as tf
-from tensorflow.keras.datasets import mnist #Imports dataset from library
+from tensorflow.keras.datasets import mnist # type: ignore #Imports dataset from library
 import os
 
 class neuralNet():

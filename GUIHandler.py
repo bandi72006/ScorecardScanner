@@ -17,9 +17,10 @@ class GUI:
         #3 = export data menu
         #4 = configuration menu
         #5 = Scanner menu
+        #6 = confirm time menu
 
 
-        self.__currentScreen = 5
+        self.__currentScreen = 6
         self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M1"), 
                            Button(self.__screen, (665,300), (300,100), "Statistics", "M2"),
                            Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
@@ -36,7 +37,7 @@ class GUI:
                                 Text(self.__screen, "Data Entry", (50, 30), 80)
                                 ]
 
-        self.__scannerMenu = [Button(self.__screen, (1060, 260), (150,150), "", ""),
+        self.__scannerMenu = [Button(self.__screen, (1060, 260), (150,150), "", "M6"),
                               Images(self.__screen, "cameraIcon.png", (1070, 285), (130,100)),
                               Text(self.__screen, "or press Space", (1060,420), 20),
                               Images(self.__screen, "WCALogo.png", (1170,610), (100,100)),
@@ -48,7 +49,23 @@ class GUI:
                               Button(self.__screen, (100,450), (300,75), "Select event", "SE", textSize=20),
                               Button(self.__screen, (540,600), (200,75), "Back", "M1", (255,94,94), (255,33,33)),
                               ]
-
+        
+        self.__confirmTimeMenu = [Images(self.__screen, "WCALogo.png", (1170,610), (100,100)),
+                                  Text(self.__screen, "Confirm results", (50, 30), 50),
+                                  Text(self.__screen, "1", (50, 112), 50),
+                                  Button(self.__screen, (100,100), (400,75), "", "ST", textSize=20),
+                                  Text(self.__screen, "2", (50, 212), 50),
+                                  Button(self.__screen, (100,200), (400,75), "", "ST", textSize=20),
+                                  Text(self.__screen, "3", (50, 312), 50),
+                                  Button(self.__screen, (100,300), (400,75), "", "ST", textSize=20),
+                                  Text(self.__screen, "4", (50, 412), 50),
+                                  Button(self.__screen, (100,400), (400,75), "", "ST", textSize=20),
+                                  Text(self.__screen, "5", (50, 512), 50),
+                                  Button(self.__screen, (100,500), (400,75), "", "ST", textSize=20),
+                                  Button(self.__screen, (100, 600), (175, 50), "Retake photo", "M5", textSize = 20),
+                                  Button(self.__screen, (325, 600), (175, 50), "Confirm times", "", textSize = 20, colour=(100,255,100), hoverColour= (50,200,50)),
+                                  ]
+  
         self.__statsMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
 
         self.__exportDataMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
@@ -56,14 +73,21 @@ class GUI:
         self.__configMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
 
         self.__menuDict = {0: self.__mainMenu, 1: self.__dataEntryMenu, 2: self.__statsMenu,
-                           3: self.__exportDataMenu, 4: self.__configMenu, 5: self.__scannerMenu}
+                           3: self.__exportDataMenu, 4: self.__configMenu, 5: self.__scannerMenu, 6: self.__confirmTimeMenu}
 
 
     def getCurrentScreen(self):
         return self.__currentScreen
+    
+    def updateCurrentScreen(self, menuNum, times): #Used to change values in textboxes on screen
+        if menuNum == 6:
+            pass
         
-    def setCurrentScreen(self, menuNum):
-        self.__currentScreen = menuNum
+    def setCurrentScreen(self, menuNum, *args): #Additional args for potential screen updating
+        if args:
+            self.updateCurrentScreen(menuNum, args)
+        else:
+            self.__currentScreen = menuNum
 
     def draw(self):
         clickTime = 0 #Not set as attribute as only used within this function

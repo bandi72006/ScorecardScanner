@@ -23,6 +23,8 @@ Front-end:
 
     Static function for functions of buttons (look at A3 sheet of OOP)
 
+    Optional args (using *args) for draw function (might be fixed with static functions)
+
 Statistics:
     find stats to generate
     generate them
