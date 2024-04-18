@@ -9,7 +9,8 @@ class Button:
         self.__colour = colour #Colour for neutral button
         self.__hoverColour = hoverColour #Colour for when mouse is hovering above button
         self.__font = pygame.font.Font('freesansbold.ttf', textSize)
-        self.__renderFont(text)
+        self.__text = text
+        self.__renderFont(self.__text)
         self.__function = function
 
         #Function code:
@@ -18,10 +19,17 @@ class Button:
         #S"char" - selection menu related to char
 
     def __renderFont(self, textToRender):
-        self.__text = self.__font.render(textToRender, False, (0,0,0))
-        self.__textSize = (self.__text.get_width(), self.__text.get_height()) #Gets space taken by text
+        self.__renderedText = self.__font.render(textToRender, False, (0,0,0))
+        self.__textSize = (self.__renderedText.get_width(), self.__renderedText.get_height()) #Gets space taken by text
 
-    def draw(self, mousePos, isClick, setScreen):
+    def getText(self):
+        return self.__text
+    
+    def setText(self, text):
+        self.__text = text
+        self.__renderFont(self.__text)
+
+    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
         #If the mouse is over the button
         if mousePos[0] > self.__coordinates[0] and mousePos[0] < (self.__coordinates[0] + self.__dimensions[0]) and mousePos[1] > (self.__coordinates[1]) and mousePos[1] < (self.__coordinates[1] + self.__dimensions[1]):
             pygame.draw.rect(self.__screen, self.__hoverColour, (self.__coordinates[0], self.__coordinates[1], self.__dimensions[0], self.__dimensions[1])) #Main button
@@ -34,7 +42,7 @@ class Button:
 
 
         #Coordinate maths is to center text in middle of button
-        self.__screen.blit(self.__text, (self.__coordinates[0] + (self.__dimensions[0] - self.__textSize[0])//2, self.__coordinates[1] + (self.__dimensions[1] - self.__textSize[1])//2))
+        self.__screen.blit(self.__renderedText, (self.__coordinates[0] + (self.__dimensions[0] - self.__textSize[0])//2, self.__coordinates[1] + (self.__dimensions[1] - self.__textSize[1])//2))
 
     def __onClick(self, setScreen):
         if self.__function[0] == "M":

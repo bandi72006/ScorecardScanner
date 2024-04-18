@@ -127,7 +127,7 @@ class Scorecard():
                 isRepeated = False
                 for contour in finalContours:
                     #If within 10 pixels of eachother
-                    print(abs(contour[0][0] - rectanglePosition[0][0]) + abs(contour[0][1] - rectanglePosition[0][1]))
+            
                     if abs(contour[0][0] - rectanglePosition[0][0]) + abs(contour[0][1] - rectanglePosition[0][1]) <= 10:
                         isRepeated = True
 

@@ -7,5 +7,5 @@ class Text:
         self.__font = pygame.font.Font('freesansbold.ttf', fontSize)
         self.__text = self.__font.render(text, False, (0,0,0))
     
-    def draw(self, mousePos, isClick, setScreen): #Unused parameter to match draw calling in GUIHandler.py
+    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
         self.__screen.blit(self.__text, self.__coordinates)

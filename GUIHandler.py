@@ -20,7 +20,7 @@ class GUI:
         #6 = confirm time menu
 
 
-        self.__currentScreen = 6
+        self.__currentScreen = 5
         self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M1"), 
                            Button(self.__screen, (665,300), (300,100), "Statistics", "M2"),
                            Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
@@ -79,15 +79,17 @@ class GUI:
     def getCurrentScreen(self):
         return self.__currentScreen
     
-    def updateCurrentScreen(self, menuNum, times): #Used to change values in textboxes on screen
-        if menuNum == 6:
-            pass
+    def getScreenElements(self):
+        return self.__menuDict[self.getCurrentScreen()]
+    
+    def setCurrentScreen(self, menuNum): #Additional args for potential screen updating
+        self.__currentScreen = menuNum
+
+    def appendToScreen(self, menuNum, elements):
+        for element in elements:
+            self.__menuDict[menuNum].append(element)
+    
         
-    def setCurrentScreen(self, menuNum, *args): #Additional args for potential screen updating
-        if args:
-            self.updateCurrentScreen(menuNum, args)
-        else:
-            self.__currentScreen = menuNum
 
     def draw(self):
         clickTime = 0 #Not set as attribute as only used within this function
@@ -95,7 +97,7 @@ class GUI:
             #Drawing
             registeredClicks = pygame.mouse.get_pressed() #0th element = left click
 
-            
+
             #Held down left click also clicks buttons on next menu
             if time.time() - clickTime > 0.5 and registeredClicks[0]: #Must include delay to allow mouse to be unclicked
                 isClick = True
@@ -107,7 +109,7 @@ class GUI:
 
             self.__screen.fill((255,255,255))
             for element in self.__menuDict[self.getCurrentScreen()]:
-                element.draw(mousePos, isClick, self.setCurrentScreen)
+                element.draw(mousePos, isClick, self.setCurrentScreen, self.appendToScreen, self.getScreenElements)
 
             pygame.display.flip()
 

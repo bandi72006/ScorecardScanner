@@ -5,7 +5,7 @@ class selectionMenu:
         #Talk about like static class or sumn (look at todo list)
         pass
 
-    def draw(self, function):
+    def draw(self, function, **kwargs):
         #USE SELENIUM TO SCRAPE INFORMATION
 
         if function == "E": #Event selection

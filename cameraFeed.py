@@ -35,7 +35,7 @@ class Camera:
         return frame
         
 
-    def draw(self, mousePos, isClick, setScreen): #Unused parameter to match draw calling in GUIHandler.py
+    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
 
         frame = self.__getCameraInput()
         surface = pygame.surfarray.make_surface(frame)
@@ -56,6 +56,15 @@ class Camera:
                     times = Scorecard()
                     times.processCard(self.__getCameraInput(), save = True)
                     results = times.getResults()
-                    setScreen(6, results)
+                    setScreen(6)
+                    resultCount = 0
+                    for element in getElements():
+                        if element.__class__.__name__ == "Button": #Updates text on buttons to results
+                            element.setText(results[resultCount])
+                            resultCount += 1
+                        
+                        if resultCount == 5:
+                            break
+                    
 
 
