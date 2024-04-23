@@ -1,5 +1,5 @@
 import pygame
-from selectionMenu import *
+from GUIComponents.selectionMenu import *
 
 class Button:
     def __init__(self, screen, XY, dims, text, function, colour = (255,242,204), hoverColour = (255,213,89), textSize = 32):
@@ -19,9 +19,12 @@ class Button:
         #S"char" - selection menu related to char
 
     def __renderFont(self, textToRender):
+        #print(textToRender)
         self.__renderedText = self.__font.render(textToRender, False, (0,0,0))
         self.__textSize = (self.__renderedText.get_width(), self.__renderedText.get_height()) #Gets space taken by text
+        #print(self.__renderedText.get_width(), self.__renderedText.get_height())
 
+        
     def getText(self):
         return self.__text
     
@@ -42,6 +45,7 @@ class Button:
 
 
         #Coordinate maths is to center text in middle of button
+
         self.__screen.blit(self.__renderedText, (self.__coordinates[0] + (self.__dimensions[0] - self.__textSize[0])//2, self.__coordinates[1] + (self.__dimensions[1] - self.__textSize[1])//2))
 
     def __onClick(self, setScreen):
@@ -53,9 +57,8 @@ class Button:
             #AUTOMATICALLY HAVE NEXT COMPETITOR CHOSEN AFTER PREVIOUS ONE IS CONFIRMED
 
             self.__selectionMenu = selectionMenu() #Talk about like static class or sumn (look at todo list)
-            self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[-1])
+            self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[-1], self.getText, self.setText)
 
-            self.__renderFont(self.__selectionMenuOutput)
             return self.__selectionMenuOutput
 
         elif self.__function == "E":

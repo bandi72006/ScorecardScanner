@@ -1,8 +1,8 @@
 import pygame
-from button import *
-from image import *
-from text import *
-from cameraFeed import *
+from GUIComponents.button import *
+from GUIComponents.image import *
+from GUIComponents.text import *
+from GUIComponents.cameraFeed import *
 import time
 
 class GUI:
@@ -20,27 +20,27 @@ class GUI:
         #6 = confirm time menu
 
 
-        self.__currentScreen = 5
+        self.__currentScreen = 0
         self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M1"), 
                            Button(self.__screen, (665,300), (300,100), "Statistics", "M2"),
                            Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
                            Button(self.__screen, (665,425), (300,100), "Configuration", "M4"),
                            Button(self.__screen, (490,550), (300,100), "Exit", "E", (255,94,94), (255,33,33)),
-                           Images(self.__screen, "WCALogo.png", (350,30), (200,200)),
+                           Images(self.__screen, "GUIComponents\WCALogo.png", (350,30), (200,200)),
                            Text(self.__screen, "Data Enterer", (580, 110), 60)
                            ]
         
         self.__dataEntryMenu = [Button(self.__screen, (440,200), (400,125), "Scan new card", "M5"),
                                 Button(self.__screen, (440,400), (400,125), "Edit competition results", "O"),
                                 Button(self.__screen, (530,600), (200,75), "Back", "M0", (255,94,94), (255,33,33)),
-                                Images(self.__screen, "WCALogo.png", (1170,610), (100,100)),
+                                Images(self.__screen, "GUIComponents\WCALogo.png", (1170,610), (100,100)),
                                 Text(self.__screen, "Data Entry", (50, 30), 80)
                                 ]
 
         self.__scannerMenu = [Button(self.__screen, (1060, 260), (150,150), "", "M6"),
-                              Images(self.__screen, "cameraIcon.png", (1070, 285), (130,100)),
+                              Images(self.__screen, "GUIComponents\cameraIcon.png", (1070, 285), (130,100)),
                               Text(self.__screen, "or press Space", (1060,420), 20),
-                              Images(self.__screen, "WCALogo.png", (1170,610), (100,100)),
+                              Images(self.__screen, "GUIComponents\WCALogo.png", (1170,610), (100,100)),
                               Text(self.__screen, "Take photo", (50, 30), 50),
                               Camera(self.__screen, (460,100), (480,360)),
                               Text(self.__screen, "Event: ", (100, 150), 40),
@@ -50,7 +50,7 @@ class GUI:
                               Button(self.__screen, (540,600), (200,75), "Back", "M1", (255,94,94), (255,33,33)),
                               ]
         
-        self.__confirmTimeMenu = [Images(self.__screen, "WCALogo.png", (1170,610), (100,100)),
+        self.__confirmTimeMenu = [Images(self.__screen, "GUIComponents\WCALogo.png", (1170,610), (100,100)),
                                   Text(self.__screen, "Confirm results", (50, 30), 50),
                                   Text(self.__screen, "1", (50, 112), 50),
                                   Button(self.__screen, (100,100), (400,75), "", "ST", textSize=20),

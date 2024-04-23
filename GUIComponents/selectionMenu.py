@@ -5,7 +5,7 @@ class selectionMenu:
         #Talk about like static class or sumn (look at todo list)
         pass
 
-    def draw(self, function, **kwargs):
+    def draw(self, function, *argv): #1st argv: getText, 2nd argv: setText
         #USE SELENIUM TO SCRAPE INFORMATION
 
         if function == "E": #Event selection
@@ -22,3 +22,9 @@ class selectionMenu:
             
             output = choicebox("", "Select event: ", competitors)
             return output
+        
+        if function == "T": #Time edit
+            #Grabs current time
+            time = argv[0]()
+            newTime = textbox("Edit time:", "Edit time:", time)
+            argv[1](newTime)        
