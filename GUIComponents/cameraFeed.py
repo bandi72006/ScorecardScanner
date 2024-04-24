@@ -60,7 +60,8 @@ class Camera:
                     resultCount = 0
                     for element in getElements():
                         if element.__class__.__name__ == "Button": #Updates text on buttons to results
-                            element.setText(results[resultCount])
+                            element.text.setText(results[resultCount])
+                            element.renderText()
                             resultCount += 1
                         
                         if resultCount == 5:

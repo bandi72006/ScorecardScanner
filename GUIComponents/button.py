@@ -1,5 +1,6 @@
 import pygame
 from GUIComponents.selectionMenu import *
+from GUIComponents.text import *
 
 class Button:
     def __init__(self, screen, XY, dims, text, function, colour = (255,242,204), hoverColour = (255,213,89), textSize = 32):
@@ -8,9 +9,10 @@ class Button:
         self.__dimensions = (dims[0], dims[1])
         self.__colour = colour #Colour for neutral button
         self.__hoverColour = hoverColour #Colour for when mouse is hovering above button
-        self.__font = pygame.font.Font('freesansbold.ttf', textSize)
-        self.__text = text
-        self.__renderFont(self.__text)
+        
+        self.text = Text(screen, text, self.__coordinates, textSize)
+        self.renderText()
+        
         self.__function = function
 
         #Function code:
@@ -18,19 +20,10 @@ class Button:
         #E - quit program
         #S"char" - selection menu related to char
 
-    def __renderFont(self, textToRender):
-        #print(textToRender)
-        self.__renderedText = self.__font.render(textToRender, False, (0,0,0))
-        self.__textSize = (self.__renderedText.get_width(), self.__renderedText.get_height()) #Gets space taken by text
-        #print(self.__renderedText.get_width(), self.__renderedText.get_height())
+    def renderText(self):
+        textSize = self.text.getSize() #Maths to align text
+        self.text.setCoordinates((self.__coordinates[0] + (self.__dimensions[0] - textSize[0])//2, self.__coordinates[1] + (self.__dimensions[1] - textSize[1])//2))
 
-        
-    def getText(self):
-        return self.__text
-    
-    def setText(self, text):
-        self.__text = text
-        self.__renderFont(self.__text)
 
     def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
         #If the mouse is over the button
@@ -46,7 +39,7 @@ class Button:
 
         #Coordinate maths is to center text in middle of button
 
-        self.__screen.blit(self.__renderedText, (self.__coordinates[0] + (self.__dimensions[0] - self.__textSize[0])//2, self.__coordinates[1] + (self.__dimensions[1] - self.__textSize[1])//2))
+        self.text.draw(mousePos, isClick, setScreen, appendScreen, getElements)
 
     def __onClick(self, setScreen):
         if self.__function[0] == "M":
@@ -57,7 +50,7 @@ class Button:
             #AUTOMATICALLY HAVE NEXT COMPETITOR CHOSEN AFTER PREVIOUS ONE IS CONFIRMED
 
             self.__selectionMenu = selectionMenu() #Talk about like static class or sumn (look at todo list)
-            self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[-1], self.getText, self.setText)
+            self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[-1], self.text.getText, self.text.setText)
 
             return self.__selectionMenuOutput
 
