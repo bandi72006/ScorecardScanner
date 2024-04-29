@@ -22,7 +22,7 @@ class GUI:
                            Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
                            Button(self.__screen, (665,425), (300,100), "Configuration", "M4"),
                            Button(self.__screen, (490,550), (300,100), "Exit", "E", (255,94,94), (255,33,33)),
-                           Image(self.__screen, "WCALogo.png", (350,30), (200,200)),
+                           #Image(self.__screen, "WCALogo.png", (350,30), (200,200)),
                            Text(self.__screen, "Data Enterer", (580, 110), 60)
                            ]
         
@@ -60,8 +60,7 @@ class GUI:
             else:
                 isClick = False
             mousePos = pygame.mouse.get_pos()
-
-
+            
             self.__screen.fill((255,255,255))
             for element in self.__menuDict[self.getCurrentScreen()]:
                 element.draw(mousePos, isClick, self.setCurrentScreen)

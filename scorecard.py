@@ -12,6 +12,7 @@ class scoreCard():
     def __init__(self):
         self.predictedResults = []
         self.reader = neuralNet()
+        print(self.reader.model)
 
     #Additional arguements for debugging
     def __preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
