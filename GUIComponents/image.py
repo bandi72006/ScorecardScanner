@@ -5,11 +5,9 @@ class Images:
         self.__screen = screen
         try:
             self.__image = pygame.image.load(filePath) #saves rendering/processing time by storing surface as attribute
-        except: #Except for different paths on machines
-            filePath.replace("\\", "/")
-                
+        except: #Except for different paths on machines (Mac/linux file directories)
+            filePath = filePath.replace("\\", "/")
             filePath = "ScorecardScanner/" + filePath
-            print(filePath)
             self.__image = pygame.image.load(filePath) 
         if finalDims != (0,0): # (0,0) = has not given size as parameter = keep original size
              self.__image = pygame.transform.scale(self.__image, finalDims)

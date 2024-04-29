@@ -50,7 +50,7 @@ class Button:
             #AUTOMATICALLY HAVE NEXT COMPETITOR CHOSEN AFTER PREVIOUS ONE IS CONFIRMED
 
             self.__selectionMenu = selectionMenu() #Talk about like static class or sumn (look at todo list)
-            self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[-1], self.text.getText, self.text.setText)
+            self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[1:], self.text.getText, self.text.setText)
 
             return self.__selectionMenuOutput
 
