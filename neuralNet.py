@@ -19,7 +19,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import cross_val_score
 import cv2
 import tensorflow as tf
-from tensorflow.keras.datasets import mnist #Imports dataset from library
+from tensorflow.keras.datasets import mnist # type: ignore #Imports dataset from library
 import os
 
 class neuralNet():
@@ -27,8 +27,6 @@ class neuralNet():
         #Batch size = How many samples trained on before updating weights of network
         #Used to reduce memory requirements/lenght of training and also leads to more frequent update of weights
         self.batchSize = 1
-        
-        print("ASdsadsadsad" + os.getcwd())
 
         if os.path.isfile("neuralNet.keras"):
             self.model = tf.keras.models.load_model("neuralNet.keras")
@@ -71,11 +69,11 @@ class neuralNet():
         (trainX, trainY), (testX, testY) = mnist.load_data() #Loads dataset from library
         
         #Reshapes to add last single dimension and converts to accepted 32-bit float
-        trainX = trainX.reshape((trainX.shape[0], 28, 28, 1)).astype('float32')
+        trainX = trainX.reshape((trainX.shape[0], 28, 28, 1)).astype('float32')[:10000]
         testX = testX.reshape((testX.shape[0], 28, 28, 1)).astype('float32')
 
         #Converts labels to categorial (one hot encoding)
-        trainY = to_categorical(trainY)
+        trainY = to_categorical(trainY)[:10000]
         testY = to_categorical(testY)
 
         print("Num GPUs Available: ", tf.config.list_physical_devices())
@@ -88,5 +86,6 @@ class neuralNet():
             self.model.save("neuralNet.keras")
 
     def predict(self, image):
-        return self.model.predict(image)
+
+        return self.model.predict(image, verbose = 0)
 

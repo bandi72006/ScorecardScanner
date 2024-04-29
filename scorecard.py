@@ -8,19 +8,21 @@ import matplotlib.pyplot as plt
 from neuralNet import *
 
 
-class scoreCard():
+class Scorecard():
     def __init__(self):
-        self.predictedResults = []
-        self.reader = neuralNet()
-        print(self.reader.model)
+        self.__predictedResults = []
+        self.__reader = neuralNet()
 
     #Additional arguements for debugging
     def __preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
-        currImage = cv2.imread(inputImage)
+        currImage = cv2.imread("testCard.jpg")
+        #currImage = inputImage
+
 
         #Cropping edges to include only scorecard
 
         #Top boundary
+
         meanRowVal = 0
         whiteThreshold = 200
         currentRow = 0
@@ -28,6 +30,7 @@ class scoreCard():
             meanRowVal = 0
             for pixel in range(len(currImage[currentRow])):
                 meanRowVal += sum(currImage[currentRow][pixel])/3 #Mean brightness of each pixel accounting for RGB
+
 
             meanRowVal /= len(currImage[currentRow])
             currentRow += 1
@@ -73,14 +76,14 @@ class scoreCard():
 
         currImage = currImage[:, :currentCol]
 
-
         
         currImage = cv2.cvtColor(currImage, cv2.COLOR_BGR2GRAY)
 
         _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
-
+       
         #Dimensions of scorecard ~310x400
         #Therefore downscaled to same aspect ratio (if default parameter is used)
+
         currImage = cv2.resize(currImage, dimensions)
 
 
@@ -88,6 +91,8 @@ class scoreCard():
         
         #RETR_TREE = retrieval mode of contours - tells when contours are children of other contours (within other contours)
         #CHAIN_APPROX_SIMPLE = returns only corners of contour rather than all points lying on contour
+
+
 
         contours, _ = cv2.findContours(currImage, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
@@ -116,21 +121,33 @@ class scoreCard():
                     rectanglePosition[0][1] = min(rectanglePosition[0][1], y)
                     rectanglePosition[1][1] = max(rectanglePosition[1][1], y)
                     
-                finalContours.append(rectanglePosition)
+
+                #Checks for any accidentally repeated contours
+
+                isRepeated = False
+                for contour in finalContours:
+                    #If within 10 pixels of eachother
+            
+                    if abs(contour[0][0] - rectanglePosition[0][0]) + abs(contour[0][1] - rectanglePosition[0][1]) <= 10:
+                        isRepeated = True
+
+
+                if not isRepeated: 
+                    finalContours.append(rectanglePosition)
 
         
         if saveImage:
-            cv2.imwrite((inputImage.replace(".jpg","") + outputPath), currImage)
+            #cv2.imwrite((inputImage.replace(".jpg","") + outputPath), currImage)
+            cv2.imwrite("testidk.jpg", currImage)
 
         return finalContours, currImage
     
 
-    def processCard(self, file):
-        times, currImage = self.__preprocess(file) #Stores coordinates of rectangles surrounding times
+    def processCard(self, file, save = False):
+        times, currImage = self.__preprocess(file, saveImage=save) #Stores coordinates of rectangles surrounding times
 
         _, currImage = cv2.threshold(currImage, 200, 255, cv2.THRESH_BINARY) #Converts image to binary (purely black or white)
 
-        #Loops over every time
 
         for time in times:
             #Isolates every digit by finding white columns after columns that have black pixels
@@ -167,28 +184,72 @@ class scoreCard():
             
             #cv2.imwrite((file.replace(".jpg","") + "postProcess.jpg"), test)
 
-            if len(digitBoundaries) > 0: #Skips any empty result boxex
+            if len(digitBoundaries) > 0: #Skips any empty result boxes
                 timeResult = ""
                 for index in range(len(digitBoundaries)):
-                    digit = cv2.resize(currImage[time[0][1]:time[1][1], digitBoundaries[index][0]: digitBoundaries[index][1]], (28,28))
+
+                    #+/- 5 -> remove lines above and below digit
+                    digit = currImage[time[0][1]+5:time[1][1]-5, digitBoundaries[index][0]: digitBoundaries[index][1]]
+
+                    #Resizes only height
+                    digit = cv2.resize(digit, (digitBoundaries[index][1] - digitBoundaries[index][0], 28))
+                    
+
+                    #Adds empty columns to left and right until width is 28
+
+                    columnOfWhite = np.transpose(np.array([255]*28)[np.newaxis]) #Vertical column of empty pixels
+                    while True: #Adds alternatively to left and right of digit
+                        if digit.shape[1] >= 28:
+                            break
+                        
+                        digit = np.append(columnOfWhite, digit, axis=1)
+
+                        if digit.shape[1] >= 28:
+                            break
+                        
+                        digit = np.append(digit, columnOfWhite, axis=1)
+
+
+                    #Inverts colour to match dataset
+                    digit = (255-digit)
+
+                    #Checks if the digit is period/dot
+
+                    dotThreshold = 20 #Max number of pixels for a dot
+
+                    unique, counts = np.unique(digit, return_counts=True)
+                    colourFreq = dict(zip(unique, counts)) #Dictionary of frequency of eadch pixel value
+                    dotPixelCount = 0
+                    for value in colourFreq:
+                        if value >= 200:
+                            dotPixelCount += colourFreq[value]
 
                     #plt.imshow(digit, interpolation='nearest')
-
-                    #digit = np.expand_dims(digit,-1)
-                    #digit = np.expand_dims(digit, 0)
-
-
-                    probabilities = self.reader.predict(digit)
-                    
-                    print(probabilities*100)
-                    print(np.argmax(probabilities))
                     #plt.show()
                     #plt.close()
+                    
 
 
-                    timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)
+                    if dotPixelCount <= dotThreshold:
+                        timeResult += "."
+                    else:
+                        digit = np.expand_dims(digit,-1)
+                        digit = np.expand_dims(digit, 0)
+                        probabilities = self.__reader.predict(digit)
+                        
+                        #print(probabilities*100)
+                        #print(np.argmax(probabilities))
 
-                print(timeResult)
+                        ####QUEUE FOR NEURAL NET HANDING EACH CHARACTER????
+                        timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)
+
+
+                
+                #print(timeResult)
+                self.__predictedResults.append(timeResult)
+
+    def getResults(self):
+        return self.__predictedResults
 
         
 
