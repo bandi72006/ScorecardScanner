@@ -1,12 +1,13 @@
 from easygui import *
 import tkinter as tk
 from tkinter import ttk
+from config import *
 
 class selectionMenu:
     def __init__(self):
         self.__window = tk.Tk() 
         self.__window.title('Combobox') 
-        self.__window.geometry('500x250') 
+        self.__window.geometry('500x100') 
 
     def draw(self, function, *argv): #1st argv: getText, 2nd argv: setText
         #E - Event selection
@@ -37,6 +38,16 @@ class selectionMenu:
 
 
         if function == "CL": #Edit competition link
-            textBox = tk.Text(self.__window, height = 5, width = 52, bg = "light yellow")
-            textBox.pack()
+            #Private attributes vs variables so can be accessed by other methods within class
+            self.__textBox = tk.Text(self.__window, height = 2, width = 52, bg = "light yellow")
+            self.__okButton = tk.Button(self.__window, text = "submit link", command=self.__configOnClose)
+            self.__textBox.pack()
+            self.__okButton.pack()
             self.__window.mainloop()
+
+
+    def __configOnClose(self):
+        value = self.__textBox.get("1.0",'end-1c') #Get value from textbox
+        
+        editCompLink(value)
+        self.__window.destroy()

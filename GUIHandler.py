@@ -71,7 +71,7 @@ class GUI:
         self.__exportDataMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
 
         self.__configMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "SE", (255,94,94), (255,33,33)),
-                             Button(self.__screen, (440,100), (400,100), "Enter comp WCA link", "SCL")
+                             Button(self.__screen, (440,100), (400,100), "Enter comp WCA link", "M0")
                             ]
 
         self.__menuDict = {0: self.__mainMenu, 1: self.__dataEntryMenu, 2: self.__statsMenu,
