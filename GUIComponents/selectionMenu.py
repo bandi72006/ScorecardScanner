@@ -14,6 +14,7 @@ class selectionMenu:
         #C - Competitor selection
         #T - Edit time
         #CL - Edit competition link
+        #CN - Edit competition name
 
         if function == "E": #Event selection
 
@@ -37,17 +38,32 @@ class selectionMenu:
             argv[1](newTime)        
 
 
-        if function == "CL": #Edit competition link
+        if function == "CN": #Edit competition name
             #Private attributes vs variables so can be accessed by other methods within class
             self.__textBox = tk.Text(self.__window, height = 2, width = 52, bg = "light yellow")
-            self.__okButton = tk.Button(self.__window, text = "submit link", command=self.__configOnClose)
+            self.__okButton = tk.Button(self.__window, text = "submit name", command=self.__configName)
             self.__textBox.pack()
             self.__okButton.pack()
             self.__window.mainloop()
 
 
-    def __configOnClose(self):
-        value = self.__textBox.get("1.0",'end-1c') #Get value from textbox
+        if function == "CL": #Edit competition link
+            #Private attributes vs variables so can be accessed by other methods within class
+            self.__textBox = tk.Text(self.__window, height = 2, width = 52, bg = "light yellow")
+            self.__okButton = tk.Button(self.__window, text = "submit link", command=self.__configLink)
+            self.__textBox.pack()
+            self.__okButton.pack()
+            self.__window.mainloop()
+
+    
+    def __configName(self):
+        name = self.__textBox.get("1.0",'end-1c') #Get value from textbox
+    
+        editCompName(name)
+        self.__window.destroy()
+
+    def __configLink(self):
+        link = self.__textBox.get("1.0",'end-1c') #Get value from textbox
         
-        editCompLink(value)
+        editCompLink(link)
         self.__window.destroy()
