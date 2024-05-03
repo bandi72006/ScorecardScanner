@@ -43,9 +43,9 @@ class GUI:
                               Images(self.__screen, "GUIComponents\WCALogo.png", (1170,610), (100,100)),
                               Text(self.__screen, "Take photo", (50, 30), 50),
                               Camera(self.__screen, (460,100), (480,360)),
-                              Text(self.__screen, "Event: ", (100, 150), 40),
+                              Text(self.__screen, "Competitor: ", (100, 150), 40),
                               Button(self.__screen, (100,200), (300,75), "Select competitor", "SC", textSize=20),
-                              Text(self.__screen, "Competitor: ", (100, 400), 40),
+                              Text(self.__screen, "Event: ", (100, 400), 40),
                               Button(self.__screen, (100,450), (300,75), "Select event", "SE", textSize=20),
                               Button(self.__screen, (540,600), (200,75), "Back", "M1", (255,94,94), (255,33,33)),
                               ]
@@ -70,9 +70,10 @@ class GUI:
 
         self.__exportDataMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
 
-        self.__configMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "SE", (255,94,94), (255,33,33)),
+        self.__configMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33)),
                              Button(self.__screen, (440,100), (400,100), "Edit comp name", "SCN"),
                              Button(self.__screen, (440,250), (400,100), "Edit comp WCA link", "SCL"),
+                             Button(self.__screen, (440,400), (400,100), "Edit events in comp", "SCE")
                             ]
 
         self.__menuDict = {0: self.__mainMenu, 1: self.__dataEntryMenu, 2: self.__statsMenu,

@@ -40,3 +40,12 @@ def editCompLink(url):
 def editCompName(compName):
     editYAMLFile("compName", compName)
 
+def editCompEvents(eventsDict):
+    editYAMLFile("eventsList", eventsDict)
+
+def getCompetitors():
+    with open("config.yaml") as file:
+        configFile = yaml.safe_load(file)
+
+    return configFile["competitorList"]
+

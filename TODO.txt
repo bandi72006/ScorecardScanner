@@ -39,5 +39,5 @@ Complexity:
     Refer to spec for complexity marks?
     Public and private methods/attributes
     QUEUE FOR NEURAL NET HANDING EACH CHARACTER????
-    HASH TABLE TO STORE RESULTS (KEY = WCAID + EVENT + ROUND -> HASHALGORITHM)
+    HASH TABLE TO STORE RESULTS (KEYzw = WCAID + EVENT + ROUND -> HASHALGORITHM)
     Use interface for UI elements 
