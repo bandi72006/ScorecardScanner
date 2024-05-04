@@ -19,7 +19,7 @@ class selectionMenu:
             self.__window.geometry('100x400')
 
             self.__selectedEvent = ""
-            events = getEvents()
+            events = config.getEvents()
 
             self.__list = tk.Listbox(self.__window, selectmode = "single", height=20) 
             self.__list.pack()
@@ -39,7 +39,7 @@ class selectionMenu:
             self.__window.geometry('100x400')
 
             self.__selectedCompetitor = ""
-            competitors = getCompetitors()
+            competitors = config.getCompetitors()
 
             self.__list = tk.Listbox(self.__window, selectmode = "single", height=20) 
             self.__list.pack()
@@ -109,7 +109,7 @@ class selectionMenu:
     def __configName(self):
         name = self.__textBox.get("1.0",'end-1c') #Get value from textbox
     
-        editCompName(name)
+        config.editCompName(name)
         self.__window.destroy()
 
     def __configEvents(self):
@@ -118,13 +118,13 @@ class selectionMenu:
             if int(self.__spinBoxes[i].get()) != 0: #Only add events that are in comp
                 eventsDict[self.__events[i]] = int(self.__spinBoxes[i].get())
             
-        editCompEvents(eventsDict)
+        config.editCompEvents(eventsDict)
         self.__window.destroy()
 
     def __configLink(self):
         link = self.__textBox.get("1.0",'end-1c') #Get value from textbox
         
-        editCompLink(link)
+        config.editCompLink(link)
         self.__window.destroy()
 
     def __selectCompetitor(self):

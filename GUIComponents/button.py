@@ -81,7 +81,7 @@ class Button:
                     break
 
             if isValidTimes == True: #If all 5 times are valid
-                RoundResult(getCurrentCompetitor["event"], results)
+                RoundResult(config.getCurrentCompetitor["event"], results)
 
         
         elif self.__function[0] == "S":
@@ -90,13 +90,13 @@ class Button:
             self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[1:], self.text.getText, self.text.setText)
             
             if self.__function[-1] == "C": #Competitor selection
-                currentCompetitor = getCurrentCompetitor()
+                currentCompetitor = config.getCurrentCompetitor()
                 currentCompetitor["competitor"] = self.__selectionMenuOutput
-                editYAMLFile("currentCompetitor", currentCompetitor)
+                config.editYAMLFile("currentCompetitor", currentCompetitor)
             if self.__function[-1] == "E": #Event selection
-                currentCompetitor = getCurrentCompetitor()
+                currentCompetitor = config.getCurrentCompetitor()
                 currentCompetitor["event"] = self.__selectionMenuOutput
-                editYAMLFile("currentCompetitor", currentCompetitor)
+                config.editYAMLFile("currentCompetitor", currentCompetitor)
 
             return self.__selectionMenuOutput
 
