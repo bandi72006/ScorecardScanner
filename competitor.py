@@ -1,19 +1,12 @@
 import re
 
 class Comptetitor:
-    def __init__(self, name, nationality):  
+    def __init__(self, name):  
         self.__name = name
-        self.__nationality = nationality
         self.__results = [] #Composition using RoundResult objects in has-a relationship
-
-    def getWCAID(self):
-        return self.__WCAID
 
     def getName(self):
         return self.__name
-    
-    def getNationality(self):
-        return self.__nationality
     
     def addResult(self, roundResult):
         self.__results.append(roundResult)
@@ -62,7 +55,6 @@ class Result:
 
     def __checkTime(self, time):
         #Regular expression for WCA valid time
-        print(time)
         matchObject = re.search("((\d)*:)?\d?\d[.]\d\d", time) 
         if matchObject != None:
             if matchObject.span()[1]-matchObject.span()[0] == len(time):

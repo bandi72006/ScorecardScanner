@@ -3,6 +3,7 @@ from GUIComponents.selectionMenu import *
 from GUIComponents.text import *
 from competitor import *
 from config import *
+from competition import *
 import tkinter as tk
 
 class Button:
@@ -62,17 +63,13 @@ class Button:
             results = []
             resultCount = 0
 
-
             for element in getElements():
 
                 if element.__class__.__name__ == "Button": #Loops over first 5 buttons (that contain the time)
-
                     try:
                         results.append(Result(element.text.getText()) if element.text.getText != "DNF" else DNFResult())
-
                     
                     except ValueError as error:
-
                         self.__raiseError(repr(error) + " --> " + element.text.getText())
                         isValidTimes = False
                     resultCount += 1
@@ -81,7 +78,18 @@ class Button:
                     break
 
             if isValidTimes == True: #If all 5 times are valid
-                RoundResult(config.getCurrentCompetitor["event"], results)
+                currentCompetitor = config.getCurrentCompetitor()
+                
+                try: #Case: competitor already in array of competitors
+                    currentCompetitor = competition.getCompetitorByName(currentCompetitor["competitor"]) #Object of competitor
+                    currentCompetitor.addResult(RoundResult(config.getCurrentCompetitor()["event"], results))
+
+                except IndexError: #Case: creates object for competitor not yet in array of competitors
+                    competition.addCompetitor(currentCompetitor["competitor"]) #Creates new competitor object
+                    currentCompetitor = competition.getCompetitorByName(currentCompetitor["competitor"])
+                    currentCompetitor.addResult(RoundResult(config.getCurrentCompetitor()["event"], results))
+
+                setScreen(5) #Returns back to competitor scanner menu
 
         
         elif self.__function[0] == "S":
