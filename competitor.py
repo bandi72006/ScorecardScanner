@@ -1,4 +1,6 @@
 import re
+from config import *
+import pandas as pd
 
 class Comptetitor:
     def __init__(self, name):  
@@ -11,8 +13,44 @@ class Comptetitor:
     def addResult(self, roundResult):
         self.__results.append(roundResult)
 
+        #add to CSV file for O(1) access
+        times = []
+        for time in roundResult.getResults():
+            times.append(time.getTime())
+
+
+        #Hashing key: 
+        #(sum ASCII of competitor name)*1234 + (sum ASCII of event name)*2006*(roundNumber)
+        #Modulo 10,001 (size of CSV file + 1)
+
+        competitorInfo = config.getCurrentCompetitor()
+        competitorHash = Comptetitor.generateHashKey(self.__name, competitorInfo["event"])
+        self.__editCSVFile(competitorHash, times)
+    
+    @staticmethod
+    def generateHashKey(name, event):
+        hashKey = 0
+        for char in name:
+            hashKey += ord(char)*1234
+        
+        for char in event:
+            hashKey += ord(char)*2006*int(event[-1])
+        
+        hashKey = hashKey%10001
+        print(hashKey)
+        return hashKey
+
     def getResult(self):
         return self.__results
+    
+    def __editCSVFile(self, index, times):
+        results = pd.read_csv("results.csv") 
+        
+        results.loc[index] = "time"
+        
+        results.to_csv("results.csv", index=False) 
+        
+
     
 class RoundResult:
     def __init__(self, round, times):
@@ -21,6 +59,9 @@ class RoundResult:
         self.__ranking = -1 #Not set yet
         self.__statistics = {}
     
+    def getRound(self):
+        return self.__round
+
     def getResults(self):
         return self.__times
     
@@ -55,14 +96,13 @@ class Result:
 
     def __checkTime(self, time):
         #Regular expression for WCA valid time
-        matchObject = re.search("((\d)*:)?\d?\d[.]\d\d", time) 
+        matchObject = re.search("((\d)*:)?\d?\d[.]\d\d(\d)?", time) 
         if matchObject != None:
             if matchObject.span()[1]-matchObject.span()[0] == len(time):
                 return True
             
-        else:
-            raise ValueError("Invalid time format")
-
+        #Raised if either condition is false
+        raise ValueError("Invalid time format")
 
     def getTime(self):
         return self.__time
