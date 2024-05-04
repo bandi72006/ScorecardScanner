@@ -20,7 +20,7 @@ class GUI:
         #6 = confirm time menu
 
 
-        self.__currentScreen = 0
+        self.__currentScreen = 5
         self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M1"), 
                            Button(self.__screen, (665,300), (300,100), "Statistics", "M2"),
                            Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
@@ -63,7 +63,7 @@ class GUI:
                                   Text(self.__screen, "5", (50, 512), 50),
                                   Button(self.__screen, (100,500), (400,75), "", "ST", textSize=20),
                                   Button(self.__screen, (100, 600), (175, 50), "Retake photo", "M5", textSize = 20),
-                                  Button(self.__screen, (325, 600), (175, 50), "Confirm times", "", textSize = 20, colour=(100,255,100), hoverColour= (50,200,50)),
+                                  Button(self.__screen, (325, 600), (175, 50), "Confirm times", "C", textSize = 20, colour=(100,255,100), hoverColour= (50,200,50)),
                                   ]
   
         self.__statsMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
@@ -115,7 +115,6 @@ class GUI:
                 element.draw(mousePos, isClick, self.setCurrentScreen, self.appendToScreen, self.getScreenElements)
 
             pygame.display.flip()
-
 
             #Event handling
             for event in pygame.event.get():

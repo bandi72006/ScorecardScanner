@@ -1,16 +1,7 @@
 import re
 
 class Comptetitor:
-    def __init__(self, WCAID, name, nationality):
-        self.__WCAID = WCAID
-        #check if WCAID is valid
-        #Format of \d\d\d\d\a\a\a\a\d\d
-        matchObject = re.search("[0-9][0-9][0-9][0-9][A-Z][A-Z][A-Z][A-Z][0-9][0-9]", self.__WCAID)
-        if matchObject != None and len(self.__WCAID) == 10:
-            pass #is valid
-        else:
-            raise ValueError("Invalid WCAID")
-
+    def __init__(self, name, nationality):  
         self.__name = name
         self.__nationality = nationality
         self.__results = [] #Composition using RoundResult objects in has-a relationship
@@ -31,11 +22,10 @@ class Comptetitor:
         return self.__results
     
 class RoundResult:
-    def __init__(self, event, roundNumber, times, ranking):
-        self.__event = event
-        self.__roundNumber = roundNumber
+    def __init__(self, round, times):
+        self.__round = round
         self.__times = times #Composition using Result objects in has-a relationship
-        self.__ranking = ranking
+        self.__ranking = -1 #Not set yet
         self.__statistics = {}
     
     def getResults(self):
@@ -68,9 +58,11 @@ class Result:
     def __init__(self, time):
         if self.__checkTime(time):
             self.__time = time
-    
+
+
     def __checkTime(self, time):
         #Regular expression for WCA valid time
+        print(time)
         matchObject = re.search("((\d)*:)?\d?\d[.]\d\d", time) 
         if matchObject != None:
             if matchObject.span()[1]-matchObject.span()[0] == len(time):

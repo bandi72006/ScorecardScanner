@@ -1,6 +1,4 @@
-from easygui import *
 import tkinter as tk
-from tkinter import ttk
 from config import *
 
 class selectionMenu:
@@ -18,12 +16,24 @@ class selectionMenu:
         #CE - Edit events in comp (for config)
 
         if function == "E": #Event selection
+            self.__window.geometry('100x400')
 
-            events = ["2x2R1", "2x2R2", "3x3R1", "3x3R2", "3x3R3", "PyraminxR1", "PyraminxR2",
-                      "4x4R1", "SkewbR1", "SkewbR1"]
+            self.__selectedEvent = ""
+            events = getEvents()
 
-            output = choicebox("", "Select event: ", events)
-            return output
+            self.__list = tk.Listbox(self.__window, selectmode = "single", height=20) 
+            self.__list.pack()
+            for i in range(len(events)): 
+                self.__list.insert(tk.END, events[i])  
+
+            self.__okButton = tk.Button(self.__window, text = "Select event", command=self.__selectEvent)
+            self.__okButton.pack()
+        
+            self.__window.mainloop() 
+            
+            argv[1](self.__selectedEvent) #Sets button label
+            return self.__selectedEvent
+        
 
         if function == "C": #Competitor selection
             self.__window.geometry('100x400')
@@ -42,12 +52,20 @@ class selectionMenu:
             self.__window.mainloop() 
             
             argv[1](self.__selectedCompetitor) #Sets button label
+            return self.__selectedCompetitor
         
         if function == "T": #Time edit
             #Grabs current time
-            time = argv[0]()
-            newTime = textbox("Edit time:", "Edit time:", time)
-            argv[1](newTime)   #Sets button label 
+            self.__newTime = argv[0]()
+            self.__textBox = tk.Text(self.__window, height = 2, width = 52, bg = "light yellow")
+            self.__textBox.insert(tk.END, str(self.__newTime))
+            self.__okButton = tk.Button(self.__window, text = "Confirm time", command=self.__confirmTime)
+
+            self.__textBox.pack()
+            self.__okButton.pack()
+
+            self.__window.mainloop()
+            argv[1](self.__newTime)   #Sets button label 
 
 
         if function == "CN": #Edit competition name
@@ -111,6 +129,15 @@ class selectionMenu:
 
     def __selectCompetitor(self):
         self.__selectedCompetitor = self.__list.get(tk.ANCHOR) 
-        print(self.__selectedCompetitor)
+
+        self.__window.destroy()
+
+    def __selectEvent(self):
+        self.__selectedEvent = self.__list.get(tk.ANCHOR) 
+
+        self.__window.destroy()
+
+    def __confirmTime(self):
+        self.__newTime = self.__textBox.get("1.0",'end-1c') 
 
         self.__window.destroy()

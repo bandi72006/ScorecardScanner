@@ -66,6 +66,7 @@ class Camera:
                         
                         if resultCount == 5:
                             break
-                    
 
-
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                break

@@ -10,9 +10,8 @@ def editYAMLFile(key, value):
         if data == key:
             configFile[key] = value
 
-
-    with open("config.yaml", "w") as f:
-        yaml.dump(configFile, f)
+    with open("config.yaml", "w") as file:
+        yaml.dump(configFile, file)
 
 
 def editCompLink(url):
@@ -49,3 +48,20 @@ def getCompetitors():
 
     return configFile["competitorList"]
 
+
+def getEvents():
+    with open("config.yaml") as file:
+        configFile = yaml.safe_load(file)
+    
+    events = []
+    for event in configFile["eventsList"]:
+        for i in range(configFile["eventsList"][event]):
+            events.append(str(event) + "R" + str(i+1))
+    
+    return events
+
+def getCurrentCompetitor():
+    with open("config.yaml") as file:
+        configFile = yaml.safe_load(file)
+
+    return configFile["currentCompetitor"]

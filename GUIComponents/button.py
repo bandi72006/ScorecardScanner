@@ -1,6 +1,9 @@
 import pygame
 from GUIComponents.selectionMenu import *
 from GUIComponents.text import *
+from competitor import *
+from config import *
+import tkinter as tk
 
 class Button:
     def __init__(self, screen, XY, dims, text, function, colour = (255,242,204), hoverColour = (255,213,89), textSize = 32):
@@ -17,8 +20,9 @@ class Button:
 
         #Function code:
         # M0 - Menu change to menu #0
-        #E - quit program
-        #S"char" - selection menu related to char
+        # E - quit program
+        # S"char" - selection menu related to char
+        # C - Confirm time
 
     def renderText(self):
         textSize = self.text.getSize() #Maths to align text
@@ -30,7 +34,7 @@ class Button:
         if mousePos[0] > self.__coordinates[0] and mousePos[0] < (self.__coordinates[0] + self.__dimensions[0]) and mousePos[1] > (self.__coordinates[1]) and mousePos[1] < (self.__coordinates[1] + self.__dimensions[1]):
             pygame.draw.rect(self.__screen, self.__hoverColour, (self.__coordinates[0], self.__coordinates[1], self.__dimensions[0], self.__dimensions[1])) #Main button
             if isClick:
-                self.__onClick(setScreen)
+                self.__onClick(setScreen, getElements)
         else: 
             pygame.draw.rect(self.__screen, self.__colour, (self.__coordinates[0], self.__coordinates[1], self.__dimensions[0], self.__dimensions[1])) #Main button
         
@@ -41,16 +45,58 @@ class Button:
 
         self.text.draw(mousePos, isClick, setScreen, appendScreen, getElements)
 
-    def __onClick(self, setScreen):
+    def __raiseError(self, message):
+        window = tk.Tk() 
+        window.title('WCA Scorecard scanner') 
+        window.geometry('300x70') 
+        label = tk.Label(window, text = message)
+        label.pack()
+        window.mainloop()
+
+    def __onClick(self, setScreen, getElements):
         if self.__function[0] == "M":
             setScreen(int(self.__function[-1]))
+
+        elif self.__function[0] == "C":
+            isValidTimes = True #Used to check if can move onto next competitor
+            results = []
+            resultCount = 0
+
+
+            for element in getElements():
+
+                if element.__class__.__name__ == "Button": #Loops over first 5 buttons (that contain the time)
+
+                    try:
+                        results.append(Result(element.text.getText()) if element.text.getText != "DNF" else DNFResult())
+
+                    
+                    except ValueError as error:
+
+                        self.__raiseError(repr(error) + " --> " + element.text.getText())
+                        isValidTimes = False
+                    resultCount += 1
+
+                if resultCount == 5:
+                    break
+
+            if isValidTimes == True: #If all 5 times are valid
+                RoundResult(getCurrentCompetitor["event"], results)
+
         
         elif self.__function[0] == "S":
-            #Pop chosen competitior from list once time is confirmed
-            #AUTOMATICALLY HAVE NEXT COMPETITOR CHOSEN AFTER PREVIOUS ONE IS CONFIRMED
 
             self.__selectionMenu = selectionMenu() #Talk about like static class or sumn (look at todo list)
             self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[1:], self.text.getText, self.text.setText)
+            
+            if self.__function[-1] == "C": #Competitor selection
+                currentCompetitor = getCurrentCompetitor()
+                currentCompetitor["competitor"] = self.__selectionMenuOutput
+                editYAMLFile("currentCompetitor", currentCompetitor)
+            if self.__function[-1] == "E": #Event selection
+                currentCompetitor = getCurrentCompetitor()
+                currentCompetitor["event"] = self.__selectionMenuOutput
+                editYAMLFile("currentCompetitor", currentCompetitor)
 
             return self.__selectionMenuOutput
 
