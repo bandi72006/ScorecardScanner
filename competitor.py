@@ -1,6 +1,6 @@
 import re
 from config import *
-import pandas as pd
+import csv
 
 class Comptetitor:
     def __init__(self, name):  
@@ -44,11 +44,16 @@ class Comptetitor:
         return self.__results
     
     def __editCSVFile(self, index, times):
-        results = pd.read_csv("results.csv") 
-        
-        results.loc[index] = "time"
-        
-        results.to_csv("results.csv", index=False) 
+        with open('results.csv') as file:
+            content = file.readline()
+        content = content.split(",")
+
+        content[index] = times
+        with open("results.csv", "w") as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(content)
+
+
         
 
     
