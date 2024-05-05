@@ -26,5 +26,5 @@ class Text:
         self.__text = text
         self.__renderFont(self.__text)
 
-    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
+    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements, setScreenElements): #Unused parameter to match draw calling in GUIHandler.py
         self.__screen.blit(self.__renderedText, self.__coordinates)

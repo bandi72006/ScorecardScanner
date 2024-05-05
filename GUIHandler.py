@@ -97,6 +97,9 @@ class GUI:
     def appendToScreen(self, menuNum, element):
         self.__menuDict[menuNum].append(element)
     
+    def setScreenElements(self, menuNum, elements):
+        self.__menuDict[menuNum] = elements
+    
         
 
     def draw(self):
@@ -116,7 +119,7 @@ class GUI:
             
             self.__screen.fill((255,255,255))
             for element in self.__menuDict[self.getCurrentScreen()]:
-                element.draw(mousePos, isClick, self.setCurrentScreen, self.appendToScreen, self.getScreenElements)
+                element.draw(mousePos, isClick, self.setCurrentScreen, self.appendToScreen, self.getScreenElements, self.setScreenElements)
 
             pygame.display.flip()
 

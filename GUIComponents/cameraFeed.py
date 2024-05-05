@@ -35,7 +35,7 @@ class Camera:
         return frame
         
 
-    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
+    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements, setScreenElements): #Unused parameter to match draw calling in GUIHandler.py
 
         frame = self.__getCameraInput()
         surface = pygame.surfarray.make_surface(frame)

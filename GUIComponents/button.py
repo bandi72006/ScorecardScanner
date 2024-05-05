@@ -33,21 +33,20 @@ class Button:
         self.text.setCoordinates((self.__coordinates[0] + (self.__dimensions[0] - textSize[0])//2, self.__coordinates[1] + (self.__dimensions[1] - textSize[1])//2))
 
 
-    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
+    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements, setScreenElements): #Unused parameter to match draw calling in GUIHandler.py
         #If the mouse is over the button
         if mousePos[0] > self.__coordinates[0] and mousePos[0] < (self.__coordinates[0] + self.__dimensions[0]) and mousePos[1] > (self.__coordinates[1]) and mousePos[1] < (self.__coordinates[1] + self.__dimensions[1]):
             pygame.draw.rect(self.__screen, self.__hoverColour, (self.__coordinates[0], self.__coordinates[1], self.__dimensions[0], self.__dimensions[1])) #Main button
             if isClick:
-                self.__onClick(setScreen, getElements, appendScreen)
+                self.__onClick(setScreen, getElements, appendScreen, setScreenElements)
         else: 
             pygame.draw.rect(self.__screen, self.__colour, (self.__coordinates[0], self.__coordinates[1], self.__dimensions[0], self.__dimensions[1])) #Main button
         
+
         pygame.draw.rect(self.__screen, (0,0,0), (self.__coordinates[0]-1, self.__coordinates[1]-1, self.__dimensions[0]+1, self.__dimensions[1]+1), 1) #Button border
 
 
-        #Coordinate maths is to center text in middle of button
-
-        self.text.draw(mousePos, isClick, setScreen, appendScreen, getElements)
+        self.text.draw(mousePos, isClick, setScreen, appendScreen, getElements, setScreenElements)
 
     def __raiseError(self, message):
         window = tk.Tk() 
@@ -57,15 +56,29 @@ class Button:
         label.pack()
         window.mainloop()
 
-    def __onClick(self, setScreen, getElements, appendScreen):
+    def __onClick(self, setScreen, getElements, appendScreen, setScreenElements):
         if self.__function[0] == "M":
             setScreen(int(self.__function[-1]))
 
         elif self.__function[0] == "s":
-            competitorForStats = config.getCurrentCompetitor()
-            if competitorForStats["competitor"] != "all": #Individual competitor
+            #Resets window to draw new stats
+            setScreenElements(2,[Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33)),
+                            Text(self.__screen, "Statistics", (50, 30), 50),
+                            Text(self.__screen, "Competitor: ", (100, 150), 40),
+                            Button(self.__screen, (100,200), (300,75), "Select competitor", "Sc", textSize=20),
+                            Text(self.__screen, "Event: ", (100, 400), 40),
+                            Button(self.__screen, (100,450), (300,75), "Select event", "SE", textSize=20),
+                            Button(self.__screen, (120, 575), (260, 50), "Generate statistics", "s", textSize = 20, colour=(100,255,100), hoverColour= (50,200,50)),
+                            ])
+            print(len(getElements()))
+        
+            
+            try: #Individual competitor wont throw an error
+                print("a")
+                competitorForStats = config.getCurrentCompetitor()
                 competitorForStats = competition.getCompetitorByName(competitorForStats["competitor"]).getResult(competitorForStats["event"])
                 stats = competitorForStats.getStatistics(-1, True)
+                
                 
                 statsCounter = 0 #Used to offset stats in GUI
                 for stat in stats:
@@ -79,7 +92,34 @@ class Button:
 
                     appendScreen(2, statGUI)
 
+            except IndexError: #"All" selection will throw error as not in competitor array of competition
+                stats = competition.getRoundStats(config.getCurrentCompetitor()["event"])
+                statsCounter = 0 #Used to offset stats in GUI
+                graphCounter = 0 #Used to offset graphs in GUI
+                for stat in stats:
+                    if "Graph" not in stat : #If stat is not a picture (graph)
+                        if stat == "ranking":
+                            rankCounter = 1
+                            statGUI = Text(self.__screen, "Rankings", (1070, 200+50*statsCounter), 15)
+                            statsCounter += 1
+                            appendScreen(2, statGUI)
+                            for person in stats[stat]:
+                                statGUI = Text(self.__screen, str(rankCounter) + ": " + person + " - " + str(stats[stat][person]), (1000, 200+50*statsCounter), 15)
+                                statsCounter += 1
+                                rankCounter += 1
+                                appendScreen(2, statGUI)
+                        else:
+                            statGUI = Text(self.__screen, stat + ": " + str(stats[stat]), (1000, 200+50*statsCounter), 15)
+                            statsCounter += 1
 
+                    else:
+                        statGUI = Images(self.__screen, stats[stat], (400, graphCounter*350), (448,336))
+                        os.remove(stats[stat]) #Deletes file once done
+                        graphCounter += 1
+
+                    appendScreen(2, statGUI)
+
+            print(len(getElements()))
 
 
         elif self.__function[0] == "C":

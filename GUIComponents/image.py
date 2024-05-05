@@ -14,5 +14,5 @@ class Images:
         
         self.__coordinates = (XY[0], XY[1]) #Coordinates of top-left corner
 
-    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements): #Unused parameter to match draw calling in GUIHandler.py
+    def draw(self, mousePos, isClick, setScreen, appendScreen, getElements, setScreenElements): #Unused parameter to match draw calling in GUIHandler.py
         self.__screen.blit(self.__image, self.__coordinates)

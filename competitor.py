@@ -57,7 +57,8 @@ class Comptetitor:
 
         os.remove("results.csv") #Removes old version of the file
 
-        content[index] = times
+        for i in range(len(times)):
+            content[index+i] = times[i]
         with open("results.csv", "w") as csvfile:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(content)
@@ -68,7 +69,6 @@ class RoundResult:
     def __init__(self, round, times):
         self.__round = round
         self.__times = times #Composition using Result objects in has-a relationship
-        self.__ranking = -1 #Not set yet
         self.__statistics = {}
     
     def getRound(self):
@@ -80,11 +80,6 @@ class RoundResult:
     def getRanking(self):
         return self.__ranking
     
-    def setRakning(self, rank):
-        if rank >= 1:
-            self.__ranking = rank
-        else:
-            raise ValueError("Invalid rank")
         
     def __calculateStatistics(self, includeGraph):
         #Converts time to float representation to make it easy to work with
@@ -119,9 +114,8 @@ class RoundResult:
 
 
         #AO5
-        times.remove(max(times))
-        times.remove(min(times))
-        self.__statistics["AO5"] = round(sum(times)/3,2)
+ 
+        self.__statistics["AO5"] = round((sum(times)-min(times)-max(times))/3,2)
 
         
 
