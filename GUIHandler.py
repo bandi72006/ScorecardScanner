@@ -12,16 +12,17 @@ class GUI:
         pygame.display.set_caption("WCA Scorecard Scanner")
 
         #0 = Main menu
-        #1 = Data entry menu
+        #1 = Null
         #2 = statistics menu
         #3 = export data menu
         #4 = configuration menu
         #5 = Scanner menu
         #6 = confirm time menu
+        #7 = edit time menu
 
 
-        self.__currentScreen = 5
-        self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M1"), 
+        self.__currentScreen = 0
+        self.__mainMenu = [Button(self.__screen, (315,300), (300,100), "Data entry", "M5"), 
                            Button(self.__screen, (665,300), (300,100), "Statistics", "M2"),
                            Button(self.__screen, (315,425), (300,100), "Export data", "M3"),
                            Button(self.__screen, (665,425), (300,100), "Configuration", "M4"),
@@ -30,12 +31,6 @@ class GUI:
                            Text(self.__screen, "Data Enterer", (580, 110), 60)
                            ]
         
-        self.__dataEntryMenu = [Button(self.__screen, (440,200), (400,125), "Scan new card", "M5"),
-                                Button(self.__screen, (440,400), (400,125), "Edit competition results", "O"),
-                                Button(self.__screen, (530,600), (200,75), "Back", "M0", (255,94,94), (255,33,33)),
-                                Images(self.__screen, "GUIComponents\WCALogo.png", (1170,610), (100,100)),
-                                Text(self.__screen, "Data Entry", (50, 30), 80)
-                                ]
 
         self.__scannerMenu = [Button(self.__screen, (1060, 260), (150,150), "", "M6"),
                               Images(self.__screen, "GUIComponents\cameraIcon.png", (1070, 285), (130,100)),
@@ -47,7 +42,7 @@ class GUI:
                               Button(self.__screen, (100,200), (300,75), "Select competitor", "SC", textSize=20),
                               Text(self.__screen, "Event: ", (100, 400), 40),
                               Button(self.__screen, (100,450), (300,75), "Select event", "SE", textSize=20),
-                              Button(self.__screen, (540,600), (200,75), "Back", "M1", (255,94,94), (255,33,33)),
+                              Button(self.__screen, (540,600), (200,75), "Back", "M0", (255,94,94), (255,33,33)),
                               ]
         
         self.__confirmTimeMenu = [Images(self.__screen, "GUIComponents\WCALogo.png", (1170,610), (100,100)),
@@ -66,7 +61,14 @@ class GUI:
                                   Button(self.__screen, (325, 600), (175, 50), "Confirm times", "C", textSize = 20, colour=(100,255,100), hoverColour= (50,200,50)),
                                   ]
   
-        self.__statsMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
+        self.__statsMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33)),
+                            Text(self.__screen, "Statistics", (50, 30), 50),
+                            Text(self.__screen, "Competitor: ", (100, 150), 40),
+                            Button(self.__screen, (100,200), (300,75), "Select competitor", "Sc", textSize=20),
+                            Text(self.__screen, "Event: ", (100, 400), 40),
+                            Button(self.__screen, (100,450), (300,75), "Select event", "SE", textSize=20),
+                            Button(self.__screen, (120, 575), (260, 50), "Generate statistics", "s", textSize = 20, colour=(100,255,100), hoverColour= (50,200,50)),
+                            ]
 
         self.__exportDataMenu = [Button(self.__screen, (1170,610), (100,100), "Back", "M0", (255,94,94), (255,33,33))]
 
@@ -75,11 +77,14 @@ class GUI:
                              Button(self.__screen, (440,250), (400,100), "Edit comp WCA link", "SCL"),
                              Button(self.__screen, (440,400), (400,100), "Edit events in comp", "SCE")
                             ]
+        
 
-        self.__menuDict = {0: self.__mainMenu, 1: self.__dataEntryMenu, 2: self.__statsMenu,
+
+        self.__menuDict = {0: self.__mainMenu, 2: self.__statsMenu,
                            3: self.__exportDataMenu, 4: self.__configMenu, 5: self.__scannerMenu, 6: self.__confirmTimeMenu}
 
 
+    
     def getCurrentScreen(self):
         return self.__currentScreen
     
@@ -89,9 +94,8 @@ class GUI:
     def setCurrentScreen(self, menuNum): #Additional args for potential screen updating
         self.__currentScreen = menuNum
 
-    def appendToScreen(self, menuNum, elements):
-        for element in elements:
-            self.__menuDict[menuNum].append(element)
+    def appendToScreen(self, menuNum, element):
+        self.__menuDict[menuNum].append(element)
     
         
 

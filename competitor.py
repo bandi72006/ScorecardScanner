@@ -1,6 +1,9 @@
 import re
 from config import *
 import csv
+import numpy as np
+import matplotlib.pyplot as plt
+import os
 
 class Comptetitor:
     def __init__(self, name):  
@@ -37,24 +40,28 @@ class Comptetitor:
             hashKey += ord(char)*2006*int(event[-1])
         
         hashKey = hashKey%10001
-        print(hashKey)
         return hashKey
 
-    def getResult(self):
-        return self.__results
-    
+    def getResult(self, event):
+        if event == -1: #All results
+            return self.__results
+
+        for result in self.__results:
+            if result.getRound() == event:
+                return result
+
     def __editCSVFile(self, index, times):
-        with open('results.csv') as file:
+        with open("results.csv") as file:
             content = file.readline()
         content = content.split(",")
+
+        os.remove("results.csv") #Removes old version of the file
 
         content[index] = times
         with open("results.csv", "w") as csvfile:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(content)
 
-
-        
 
     
 class RoundResult:
@@ -79,14 +86,50 @@ class RoundResult:
         else:
             raise ValueError("Invalid rank")
         
-    def __calculateStatistics(self):
-        pass
+    def __calculateStatistics(self, includeGraph):
+        #Converts time to float representation to make it easy to work with
+        times = []
+        for time in self.__times:
+            time = time.getTime()
+            time = time.split(":")
+            if len(time) == 2: #If there is a minute part
+                time = int(time[0])*60 + float(time[1])
+            else: #If there is no minute part
+                time = float(time[0])
 
-    def getStatistics(self, stat):
+            times.append(time)
+
+        #Render graphs
+        if includeGraph:
+            xPoints = [i for i in range(1,6)]
+            yPoints = times
+            plt.plot(xPoints, yPoints, "rx-")
+            plt.title("Times progression")
+            plt.xlabel("Solve #")
+            plt.ylabel("Time (s)")
+            plt.savefig("temp1.png")
+            self.__statistics["graphsLocation"] = "temp1.png"
+
+        
+        #Fastest solve
+        self.__statistics["Fastest"] = round(min(times),2)
+
+        #Standard deviation
+        self.__statistics["STD"] = round(np.std(times),2)
+
+
+        #AO5
+        times.remove(max(times))
+        times.remove(min(times))
+        self.__statistics["AO5"] = round(sum(times)/3,2)
+
+        
+
+    def getStatistics(self, stat, includeGraph = True):
         if self.__times == []:
             raise ValueError("No times to calculate with")
         
-        self.__calculateStatistics()
+        self.__calculateStatistics(includeGraph)
 
         if stat == -1: #Return all statistics
             return self.__statistics

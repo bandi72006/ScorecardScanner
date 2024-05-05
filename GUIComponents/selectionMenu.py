@@ -1,6 +1,7 @@
 import tkinter as tk
 from config import *
 
+
 class selectionMenu:
     def __init__(self):
         self.__window = tk.Tk() 
@@ -9,7 +10,7 @@ class selectionMenu:
 
     def draw(self, function, *argv): #1st argv: getText, 2nd argv: setText
         #E - Event selection
-        #C - Competitor selection
+        #C/c - Competitor selection (Lowercase -> "All" option for stats)
         #T - Edit time
         #CL - Edit competition link
         #CN - Edit competition name
@@ -35,11 +36,13 @@ class selectionMenu:
             return self.__selectedEvent
         
 
-        if function == "C": #Competitor selection
+        if function.upper() == "C": #Competitor selection
             self.__window.geometry('100x400')
 
             self.__selectedCompetitor = ""
             competitors = config.getCompetitors()
+            if function == "c": #All competitiors option for statistics
+                competitors.insert(0, "All") #Inserts into first item
 
             self.__list = tk.Listbox(self.__window, selectmode = "single", height=20) 
             self.__list.pack()

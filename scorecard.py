@@ -186,6 +186,7 @@ class Scorecard():
 
             if len(digitBoundaries) > 0: #Skips any empty result boxes
                 timeResult = ""
+                processingQueue = [] #Initializes empty queue
                 for index in range(len(digitBoundaries)):
 
                     #+/- 5 -> remove lines above and below digit
@@ -228,24 +229,33 @@ class Scorecard():
                     #plt.show()
                     #plt.close()
                     
-
+                    
 
                     if dotPixelCount <= dotThreshold:
-                        timeResult += "."
+                        processingQueue.append(".")
                     else:
                         digit = np.expand_dims(digit,-1)
                         digit = np.expand_dims(digit, 0)
-                        probabilities = self.__reader.predict(digit)
+
+                        processingQueue.append(digit)
+                        #probabilities = self.__reader.predict(digit)
                         
                         #print(probabilities*100)
                         #print(np.argmax(probabilities))
 
                         ####QUEUE FOR NEURAL NET HANDING EACH CHARACTER????
+                        #timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)
+
+
+
+                while len(processingQueue) > 0:
+                    digitToProcess = processingQueue.pop(0)
+                    if digitToProcess == ".":
+                        timeResult += digitToProcess
+                    else:
+                        probabilities = self.__reader.predict(digitToProcess)
                         timeResult += str(np.argmax(probabilities)) #Argmax = index of largest value (highest probability)
-
-
                 
-                #print(timeResult)
                 self.__predictedResults.append(timeResult)
 
     def getResults(self):

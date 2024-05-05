@@ -1,10 +1,12 @@
 import pygame
 from GUIComponents.selectionMenu import *
 from GUIComponents.text import *
+from GUIComponents.image import *
 from competitor import *
 from config import *
 from competition import *
 import tkinter as tk
+import os
 
 class Button:
     def __init__(self, screen, XY, dims, text, function, colour = (255,242,204), hoverColour = (255,213,89), textSize = 32):
@@ -24,6 +26,7 @@ class Button:
         # E - quit program
         # S"char" - selection menu related to char
         # C - Confirm time
+        # s - statistics
 
     def renderText(self):
         textSize = self.text.getSize() #Maths to align text
@@ -35,7 +38,7 @@ class Button:
         if mousePos[0] > self.__coordinates[0] and mousePos[0] < (self.__coordinates[0] + self.__dimensions[0]) and mousePos[1] > (self.__coordinates[1]) and mousePos[1] < (self.__coordinates[1] + self.__dimensions[1]):
             pygame.draw.rect(self.__screen, self.__hoverColour, (self.__coordinates[0], self.__coordinates[1], self.__dimensions[0], self.__dimensions[1])) #Main button
             if isClick:
-                self.__onClick(setScreen, getElements)
+                self.__onClick(setScreen, getElements, appendScreen)
         else: 
             pygame.draw.rect(self.__screen, self.__colour, (self.__coordinates[0], self.__coordinates[1], self.__dimensions[0], self.__dimensions[1])) #Main button
         
@@ -54,9 +57,30 @@ class Button:
         label.pack()
         window.mainloop()
 
-    def __onClick(self, setScreen, getElements):
+    def __onClick(self, setScreen, getElements, appendScreen):
         if self.__function[0] == "M":
             setScreen(int(self.__function[-1]))
+
+        elif self.__function[0] == "s":
+            competitorForStats = config.getCurrentCompetitor()
+            if competitorForStats["competitor"] != "all": #Individual competitor
+                competitorForStats = competition.getCompetitorByName(competitorForStats["competitor"]).getResult(competitorForStats["event"])
+                stats = competitorForStats.getStatistics(-1, True)
+                
+                statsCounter = 0 #Used to offset stats in GUI
+                for stat in stats:
+                    if stat != "graphsLocation": #If stat is not a picture (graph)
+                        statGUI = Text(self.__screen, stat + ": " + str(stats[stat]), (1070, 200+100*statsCounter), 25)
+                        statsCounter += 1
+
+                    else:
+                        statGUI = Images(self.__screen, stats[stat], (430, 100), (640,480))
+                        os.remove(stats[stat]) #Deletes file once done
+
+                    appendScreen(2, statGUI)
+
+
+
 
         elif self.__function[0] == "C":
             isValidTimes = True #Used to check if can move onto next competitor
@@ -97,7 +121,8 @@ class Button:
             self.__selectionMenu = selectionMenu() #Talk about like static class or sumn (look at todo list)
             self.__selectionMenuOutput = self.__selectionMenu.draw(self.__function[1:], self.text.getText, self.text.setText)
             
-            if self.__function[-1] == "C": #Competitor selection
+            #Writes to config file current competitor user has chosen
+            if self.__function[-1].upper() == "C": #Competitor selection
                 currentCompetitor = config.getCurrentCompetitor()
                 currentCompetitor["competitor"] = self.__selectionMenuOutput
                 config.editYAMLFile("currentCompetitor", currentCompetitor)
