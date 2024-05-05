@@ -15,8 +15,8 @@ class Scorecard():
 
     #Additional arguements for debugging
     def __preprocess(self, inputImage, dimensions = (310,400), saveImage = False, outputPath = "postProcess.jpg"):
-        currImage = cv2.imread("testCard.jpg")
-        #currImage = inputImage
+        #currImage = cv2.imread("testCard.jpg")
+        currImage = inputImage
 
 
         #Cropping edges to include only scorecard

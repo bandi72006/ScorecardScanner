@@ -32,9 +32,8 @@ class GUI:
                            ]
         
 
-        self.__scannerMenu = [Button(self.__screen, (1060, 260), (150,150), "", "M6"),
-                              Images(self.__screen, "GUIComponents\cameraIcon.png", (1070, 285), (130,100)),
-                              Text(self.__screen, "or press Space", (1060,420), 20),
+        self.__scannerMenu = [Button(self.__screen, (875, 260), (320,80), "", "N"),
+                              Text(self.__screen, "Press space", (890,275), 50),
                               Images(self.__screen, "GUIComponents\WCALogo.png", (1170,610), (100,100)),
                               Text(self.__screen, "Take photo", (50, 30), 50),
                               Camera(self.__screen, (460,100), (480,360)),

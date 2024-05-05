@@ -5,6 +5,7 @@ from GUIComponents.image import *
 from competitor import *
 from config import *
 from competition import *
+from scorecard import *
 import tkinter as tk
 import os
 
@@ -27,6 +28,7 @@ class Button:
         # S"char" - selection menu related to char
         # C - Confirm time
         # s - statistics
+
 
     def renderText(self):
         textSize = self.text.getSize() #Maths to align text
@@ -59,6 +61,7 @@ class Button:
     def __onClick(self, setScreen, getElements, appendScreen, setScreenElements):
         if self.__function[0] == "M":
             setScreen(int(self.__function[-1]))
+
 
         elif self.__function[0] == "s":
             #Resets window to draw new stats
